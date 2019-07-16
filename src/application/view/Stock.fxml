@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="450.0" prefWidth="700.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171">
+   <children>
+      <TabPane layoutX="250.0" layoutY="125.0" prefHeight="450.0" prefWidth="700.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <tabs>
+          <Tab fx:id="leftoversTab" text="Остатки" />
+          <Tab fx:id="comingTab" text="Получение" />
+            <Tab fx:id="writeOffTab" text="Списания" />
+            <Tab fx:id="displacementTab" text="Перемещения" />
+        </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

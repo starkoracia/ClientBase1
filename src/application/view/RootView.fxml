@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="700.0" prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.RootViewController">
+    <center>
+        <TabPane fx:id="mainTabPane" prefHeight="472.0" prefWidth="700.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+            <tabs>
+                <Tab fx:id="clientsTab" text="Клиенты" />
+                <Tab fx:id="paymentsTab" text="Платежи" />
+            <Tab fx:id="ordersTab" text="Заказы" />
+                <Tab fx:id="storeTab" text="Магазин" />
+                <Tab fx:id="stockTab" text="Склад" />
+                <Tab fx:id="reportsTab" disable="true" text="Отчеты" />
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>
