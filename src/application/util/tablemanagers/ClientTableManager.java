@@ -54,6 +54,7 @@ public class ClientTableManager implements TableManager<Client> {
     @Override
     public void update(Client client) {
         clientDAO.update(client);
+        updateAll();
     }
 
     @Override

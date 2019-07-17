@@ -45,6 +45,10 @@ public class ClientINFOController implements Initializable {
 
     private boolean isNewClientAdded;
 
+    public ClientINFOController() {
+        clientTableManager = new ClientTableManager();
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -159,7 +163,6 @@ public class ClientINFOController implements Initializable {
         client.setEmail(emailTextField.getText());
         client.setFindRecommendation(findRecommendationTextField.getText());
         client.setAnnotation(annotationTextField.getText());
-        System.out.println(client.getId());
         clientTableManager.update(client);
     }
 
@@ -172,10 +175,6 @@ public class ClientINFOController implements Initializable {
                 annotationTextField.getText()
         );
         return client;
-    }
-
-    public void setClientTableManager(ClientTableManager clientTableManager) {
-        this.clientTableManager = clientTableManager;
     }
 
     public void setStage(Stage stage) {

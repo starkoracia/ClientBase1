@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -340,6 +342,10 @@ public class Order {
 
     public SimpleStringProperty doerNoteProperty() {
         return new SimpleStringProperty(getDoerNote());
+    }
+
+    public SimpleStringProperty deadlineDifferenceProperty() {
+        return new SimpleStringProperty(Long.toString(DAYS.between(LocalDateTime.now(), getDeadline())));
     }
 
     @Override

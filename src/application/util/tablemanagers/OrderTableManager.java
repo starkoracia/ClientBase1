@@ -53,6 +53,7 @@ public class OrderTableManager implements TableManager<Order> {
     @Override
     public void update(Order order) {
         orderDAO.update(order);
+        updateAll();
     }
 
     @Override

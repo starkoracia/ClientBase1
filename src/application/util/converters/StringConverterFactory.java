@@ -2,8 +2,10 @@ package application.util.converters;
 
 import application.sql.daos.ClientDAO;
 import application.sql.daos.EmployeeDAO;
+import application.sql.daos.OrderStatusDAO;
 import application.sql.daos.PaymentArticleDAO;
 import application.sql.entitys.work.Employee;
+import application.sql.entitys.work.OrderStatus;
 import application.sql.entitys.work.PaymentArticle;
 import javafx.util.StringConverter;
 
@@ -12,6 +14,7 @@ public class StringConverterFactory {
     private static ClientStringConverter clientStringConverter;
     private static PaymentArticleDAO articleDAO;
     private static EmployeeDAO employeeDAO;
+    private static OrderStatusDAO orderStatusDAO;
 
     private StringConverterFactory() {
     }
@@ -67,6 +70,30 @@ public class StringConverterFactory {
             @Override
             public Employee fromString(String string) {
                 return employeeDAO.getByKey(employeeId);
+            }
+        };
+    }
+
+    public static StringConverter<OrderStatus> getOrderStatusConverter() {
+        if(orderStatusDAO == null) {
+            orderStatusDAO = new OrderStatusDAO();
+        }
+        return new StringConverter<OrderStatus>() {
+
+            private Integer orderStatusId;
+
+            @Override
+            public String toString(OrderStatus status) {
+                if (status == null) {
+                    return null;
+                }
+                orderStatusId = status.getId();
+                return status.getName();
+            }
+
+            @Override
+            public OrderStatus fromString(String string) {
+                return orderStatusDAO.getByKey(orderStatusId);
             }
         };
     }

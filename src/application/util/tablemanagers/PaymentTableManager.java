@@ -53,6 +53,7 @@ public class PaymentTableManager implements TableManager<Payment> {
     @Override
     public void update(Payment payment) {
         paymentDAO.update(payment);
+        updateAll();
     }
 
     @Override

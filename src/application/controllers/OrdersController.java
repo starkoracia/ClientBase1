@@ -5,6 +5,8 @@ import application.util.ControllerManager;
 import application.util.FocusRepeater;
 import application.util.tablemanagers.OrderTableManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -46,9 +48,15 @@ public class OrdersController implements Initializable {
     private OrderTableManager orderTableManager;
     private FXMLLoader newOrderloader;
     private String newOrderViewLocation = "../view/NewOrder.fxml";
+    private String orderInfoViewLocation = "../view/OrderINFO.fxml";
     private AnchorPane newOrderView;
     private NewOrderController newOrderController;
     private Stage newOrderStage;
+    private FXMLLoader orderInfoloader;
+    private OrderINFOController orderInfoController;
+    private AnchorPane orderInfoView;
+    private Stage orderInfoStage;
+    private Order order;
 
     public OrdersController() {
         orderTableManager = new OrderTableManager();
@@ -56,14 +64,14 @@ public class OrdersController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        makeHotFilterPanelsInvisible();
         setTableItems();
         setCellDataValues();
 
         initNewOrderViewLoader();
+        initOrderInfoViewLoader();
         setSortTable();
 
+        makeHotFilterPanelsInvisible();
     }
 
     private void setCellDataValues() {
@@ -89,8 +97,22 @@ public class OrdersController implements Initializable {
     }
 
     private void makeHotFilterPanelsInvisible() {
+        ObservableList<Order> ordersQuickList = FXCollections.observableArrayList();
+        boolean isHaveQuickOrders = false;
+        for(Order order : orderTableManager.getObservableList()) {
+            if(order.getQuickly()) {
+                System.out.println("Quick");
+                ordersQuickList.add(order);
+                isHaveQuickOrders = true;
+            }
+        }
+        if(isHaveQuickOrders) {
+            quicklyOrdersFilterAnchorPane.setVisible(true);
+        } else {
+            quicklyOrdersFilterAnchorPane.setVisible(false);
+        }
         pendingPaymentOrdersFilterAnchorPane.setVisible(false);
-        quicklyOrdersFilterAnchorPane.setVisible(false);
+
         myOrdersFilterAnchorPane.setVisible(false);
     }
 
@@ -102,6 +124,34 @@ public class OrdersController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initOrderInfoViewLoader() {
+        try {
+            orderInfoloader = new FXMLLoader(getClass().getResource(orderInfoViewLocation));
+            orderInfoView = orderInfoloader.load();
+            orderInfoController = orderInfoloader.getController();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void showOrderInfoView(Order order) {
+        if (orderInfoStage == null) {
+            orderInfoStage = new Stage();
+            setStage(getThisWindow(), orderInfoStage, "Информация о заказе", orderInfoView);
+        }
+        setOrderInfoController(order);
+        orderInfoShowAndWait();
+    }
+
+    private void setOrderInfoController(Order order) {
+        orderInfoController.setOrderToOrderInfo(order);
+        orderInfoController.setOrderInfoStage(orderInfoStage);
+    }
+
+    private void orderInfoShowAndWait() {
+        orderInfoStage.showAndWait();
     }
 
     public void showNewOrderView() {
@@ -155,7 +205,7 @@ public class OrdersController implements Initializable {
 
     public void onMouseClickedTable(MouseEvent mouseEvent) {
         if(mouseEvent.getClickCount() == 2) {
-
+            showOrderInfoView(ordersTable.getSelectionModel().getSelectedItem());
         }
     }
 

@@ -237,8 +237,9 @@ public class PaymentsController implements Initializable {
     private void showNewPaymentView(boolean isInCome, Window owner) {
         if (newPaymentStage == null) {
             newPaymentStage = new Stage();
-        }
             setStage(owner, newPaymentStage, "Новый платеж", newPaymentScene);
+        }
+
 
         setNewPaymentController(isInCome);
 

@@ -10,6 +10,7 @@ import application.sql.entitys.work.PaymentArticle;
 import application.util.AlertCaster;
 import application.util.comparators.ClientComparator;
 import application.util.combobox.ComboBoxAutoCompletioner;
+import application.util.tablemanagers.ClientTableManager;
 import application.util.textfield.AutoCompletionTFBindingImpl;
 import application.util.ControllerManager;
 import application.util.converters.StringConverterFactory;
@@ -44,23 +45,26 @@ public class NewPaymentController implements Initializable {
 
     private boolean isInComePayment;
     private String startBalance;
-
     private PaymentTableManager paymentTableManager;
-
+    private ClientTableManager clientTableManager;
     private ClientDAO clientDAO;
     private PaymentArticleDAO articleDAO;
     private EmployeeDAO employeeDAO;
-
     private Stage newPaymentStage;
-    private static AutoCompletionTFBindingImpl<Client> autoCompletionBinding;
     private Client client;
     private boolean isNewPaymentAdded;
     private Payment newPayment;
-    private List<Client> textFieldClientList;
+
+    public NewPaymentController() {
+        clientDAO = new ClientDAO();
+        articleDAO = new PaymentArticleDAO();
+        employeeDAO = new EmployeeDAO();
+        paymentTableManager = new PaymentTableManager();
+        clientTableManager = new ClientTableManager();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initFields();
         setComboBoxes();
     }
 
@@ -70,28 +74,31 @@ public class NewPaymentController implements Initializable {
         setClientComboBoxAutoCompletion();
     }
 
+    private void clientComboBoxUpdate() {
+        clientComboBox.setItems(clientTableManager.getObservableList());
+        clientComboBox.setValue(null);
+    }
+
     private void setClientComboBoxAutoCompletion() {
         ComboBoxAutoCompletioner.autoCompleteComboBoxPlus(clientComboBox, ClientComparator.getComparator());
+    }
+
+    private void setComboBoxItems() {
+        clientComboBox.setItems(clientTableManager.getObservableList());
+        paymentArticlesComboBox.setItems(FXCollections.observableArrayList(articleDAO.getAll()));
+        paymentEmployeesComboBox.setItems(FXCollections.observableArrayList(employeeDAO.getAll()));
+    }
+
+    private void setComboBoxConvertors() {
+        clientComboBox.setConverter(StringConverterFactory.getClientStringConverter());
+        paymentArticlesComboBox.setConverter(StringConverterFactory.getPaymentArticleConverter());
+        paymentEmployeesComboBox.setConverter(StringConverterFactory.getEmployeeConverter());
     }
 
     public void setClientCBoxDisable(boolean value) {
         clientComboBox.setDisable(value);
         newClientButton.setDisable(value);
     }
-
-    private void initFields() {
-        clientDAO = new ClientDAO();
-        articleDAO = new PaymentArticleDAO();
-        employeeDAO = new EmployeeDAO();
-        paymentTableManager = new PaymentTableManager();
-    }
-
-    private void setComboBoxItems() {
-        clientComboBox.setItems(FXCollections.observableArrayList(clientDAO.getAll()));
-        paymentArticlesComboBox.setItems(FXCollections.observableArrayList(articleDAO.getAll()));
-        paymentEmployeesComboBox.setItems(FXCollections.observableArrayList(employeeDAO.getAll()));
-    }
-
     public void deleteButtonOnAction(ActionEvent actionEvent) {
         newPaymentStage.hide();
     }
@@ -169,16 +176,10 @@ public class NewPaymentController implements Initializable {
         paymentDatePicker.setValue(LocalDate.now());
         amountTextField.setText("");
         commentTextArea.setText("");
-        clientComboBox.getEditor().setText("");
+        clientComboBoxUpdate();
         paymentArticlesComboBox.setValue(paymentArticlesComboBox.getItems().get(0));
         paymentEmployeesComboBox.setValue(paymentEmployeesComboBox.getItems().get(0));
         setClient(null);
-    }
-
-    private void setComboBoxConvertors() {
-        clientComboBox.setConverter(StringConverterFactory.getClientStringConverter());
-        paymentArticlesComboBox.setConverter(StringConverterFactory.getPaymentArticleConverter());
-        paymentEmployeesComboBox.setConverter(StringConverterFactory.getEmployeeConverter());
     }
 
     public String getStartBalance() {
@@ -227,7 +228,7 @@ public class NewPaymentController implements Initializable {
 
         if(clientINFOController.isNewClientAdded()) {
             client = clientINFOController.getClient();
-            clientComboBox.getItems().add(client);
+            clientComboBoxUpdate();
             clientComboBox.setValue(client);
         }
     }

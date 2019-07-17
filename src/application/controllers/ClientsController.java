@@ -154,13 +154,11 @@ public class ClientsController implements Initializable {
 
     private void setClientINFOController(boolean isNewClient) {
         clientINFOController.setStage(clientInfoStage);
-        clientINFOController.setClientTableManager(clientTableManager);
         clientINFOController.setIsNewClient(isNewClient);
-        if (!isNewClient) {
-            Client client = clientsTable.getSelectionModel().getSelectedItem();
-            clientINFOController.setClient(client);
-        } else {
+        if (isNewClient) {
             clientINFOController.setClient(null);
+        } else {
+            clientINFOController.setClient(clientsTable.getSelectionModel().getSelectedItem());
         }
         FocusRepeater.repeat(clientINFOController.nameTextField);
     }

@@ -10,7 +10,9 @@ import application.util.AlertCaster;
 import application.util.ControllerManager;
 import application.util.combobox.ComboBoxAutoCompletioner;
 import application.util.comparators.ClientComparator;
+import application.util.converters.IsPaidItems;
 import application.util.converters.StringConverterFactory;
+import application.util.tablemanagers.ClientTableManager;
 import application.util.tablemanagers.OrderTableManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,7 +35,7 @@ public class NewOrderController implements Initializable {
 
     public Button deleteButton;
     public Button saveButton;
-    public ChoiceBox<String> isPaidChoiceBox;
+    public ChoiceBox<Boolean> isPaidChoiceBox;
     public ComboBox<Client> clientComboBox;
     public Button newClientButton;
     public TextField productTypeTextField;
@@ -42,7 +44,7 @@ public class NewOrderController implements Initializable {
     public TextArea malfunctionTextArea;
     public TextField appearanceTextField;
     public TextArea equipmentTextArea;
-    public TextArea acceptorTextArea;
+    public TextArea acceptorNoteTextArea;
     public TextField estimatedPriceTextField;
     public CheckBox quicklyCheckBox;
     public DatePicker deadlineDatePicker;
@@ -50,12 +52,14 @@ public class NewOrderController implements Initializable {
     public ComboBox<Employee> managerComboBox;
     public ComboBox<Employee> doerComboBox;
     public AnchorPane mainAnchorPane;
+    public ScrollPane scrollPane;
 
     private ObservableList<String> isPaidList;
     private ClientDAO clientDAO;
     private EmployeeDAO employeeDAO;
     private Client client;
     private OrderTableManager orderTableManager;
+    private ClientTableManager clientTableManager;
     private Order order;
     private OrderStatusDAO orderStatusDAO;
     private Stage newOrederStage;
@@ -68,6 +72,7 @@ public class NewOrderController implements Initializable {
         employeeDAO = new EmployeeDAO();
         orderStatusDAO = new OrderStatusDAO();
         orderTableManager = new OrderTableManager();
+        clientTableManager = new ClientTableManager();
         malfunctionAreaPressTab = false;
         equipmentAreaPressTab = false;
         acceptorAreaPressTab = false;
@@ -76,8 +81,13 @@ public class NewOrderController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setPaidChoiceBox();
-
         setComboBoxes();
+        setScrollPaneDynamics();
+    }
+
+    private void clientComboBoxUpdate() {
+        clientComboBox.setItems(clientTableManager.getObservableList());
+        clientComboBox.setValue(null);
     }
 
     private void setComboBoxes() {
@@ -91,7 +101,7 @@ public class NewOrderController implements Initializable {
     }
 
     private void setComboBoxItems() {
-        clientComboBox.setItems(FXCollections.observableArrayList(clientDAO.getAll()));
+        clientComboBox.setItems(clientTableManager.getObservableList());
         managerComboBox.setItems(FXCollections.observableArrayList(employeeDAO.getAll()));
         doerComboBox.setItems(FXCollections.observableArrayList(employeeDAO.getAll()));
     }
@@ -103,20 +113,20 @@ public class NewOrderController implements Initializable {
     }
 
     private void setPaidChoiceBox() {
-        isPaidList = FXCollections.observableArrayList("Платный", "По гарантии");
-        isPaidChoiceBox.setItems(isPaidList);
+        isPaidChoiceBox.setItems(IsPaidItems.getItems());
+        isPaidChoiceBox.setConverter(new IsPaidItems());
     }
 
     public void clearInfoTextFields() {
-        isPaidChoiceBox.setValue("Платный");
-        clientComboBox.setValue(null);
+        isPaidChoiceBox.setValue(true);
+        clientComboBoxUpdate();
         productTypeTextField.setText("");
         brandTextField.setText("");
         modelTextField.setText("");
         malfunctionTextArea.setText("");
         appearanceTextField.setText("");
         equipmentTextArea.setText("");
-        acceptorTextArea.setText("");
+        acceptorNoteTextArea.setText("");
         estimatedPriceTextField.setText("0");
         quicklyCheckBox.setSelected(false);
         deadlineDatePicker.setValue(LocalDate.now().plusDays(4));
@@ -154,7 +164,7 @@ public class NewOrderController implements Initializable {
         order.setMalfunction(malfunctionTextArea.getText());
         order.setAppearance(appearanceTextField.getText());
         order.setEquipment(equipmentTextArea.getText());
-        order.setAcceptorNote(acceptorTextArea.getText());
+        order.setAcceptorNote(acceptorNoteTextArea.getText());
         order.setEstimatedPrice(estimatedPriceTextField.getText());
         order.setQuickly(quicklyCheckBox.isSelected());
         order.setPrepayment(prepaymentTextField.getText());
@@ -190,20 +200,73 @@ public class NewOrderController implements Initializable {
     }
 
     private void openNewClientWindow() {
-        ControllerManager.getClientsController().openClientInfoWindowFromNewPayment(true, getThisWindow());
-
+        ControllerManager.getClientsController()
+                .openClientInfoWindowFromNewPayment(true, getThisWindow());
         ClientINFOController clientINFOController = ControllerManager.getClientINFOController();
-
         if (clientINFOController.isNewClientAdded()) {
             client = clientINFOController.getClient();
-            clientComboBox.getItems().add(client);
+            clientComboBoxUpdate();
             clientComboBox.setValue(client);
             productTypeTextField.requestFocus();
         }
     }
 
-    public Stage getNewOrederStage() {
-        return newOrederStage;
+    private void setScrollPaneDynamics() {
+        clientComboBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(0.0);
+            }
+        });
+        productTypeTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(0.27492447129909436);
+            }
+        });
+        brandTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(0.4992834456580687);
+            }
+        });
+        modelTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(0.6691552405298635);
+            }
+        });
+        malfunctionTextArea.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(0.784539855914479);
+            }
+        });
+        appearanceTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(0.8967193430939662);
+            }
+        });
+        equipmentTextArea.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(1.0);
+            }
+        });
+        acceptorNoteTextArea.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(1.0);
+            }
+        });
+        estimatedPriceTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(1.0);
+            }
+        });
+        prepaymentTextField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(1.0);
+            }
+        });
+        managerComboBox.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.booleanValue()) {
+                scrollPane.setVvalue(1.0);
+            }
+        });
     }
 
     public void setNewOrederStage(Stage newOrederStage) {
@@ -235,7 +298,7 @@ public class NewOrderController implements Initializable {
         if (keyEvent.getCode() == KeyCode.TAB && equipmentAreaPressTab) {
             equipmentTextArea.deleteText(
                     equipmentTextArea.getCaretPosition() - 1, equipmentTextArea.getCaretPosition());
-            acceptorTextArea.requestFocus();
+            acceptorNoteTextArea.requestFocus();
             equipmentAreaPressTab = false;
         }
     }
@@ -248,8 +311,8 @@ public class NewOrderController implements Initializable {
 
     public void acceptorTAreaOnKReleased(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.TAB && acceptorAreaPressTab) {
-            acceptorTextArea.deleteText(
-                    acceptorTextArea.getCaretPosition() - 1, acceptorTextArea.getCaretPosition());
+            acceptorNoteTextArea.deleteText(
+                    acceptorNoteTextArea.getCaretPosition() - 1, acceptorNoteTextArea.getCaretPosition());
             estimatedPriceTextField.requestFocus();
             acceptorAreaPressTab = false;
         }
