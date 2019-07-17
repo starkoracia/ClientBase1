@@ -7,9 +7,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import application.util.ControllerManager;
+import application.util.FocusRepeater;
 import application.util.tablemanagers.ClientTableManager;
 import application.sql.entitys.work.Client;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,6 +39,8 @@ public class ClientsController implements Initializable {
     private Stage clientInfoStage;
     private VBox clientInfoView;
     private ClientTableManager clientTableManager;
+    private Scene clientInfoscene;
+    private Window tempOwner;
 
     @FXML
     public FontAwesomeIconView searchIcon;
@@ -69,6 +73,10 @@ public class ClientsController implements Initializable {
         setCellDataValues();
         initClientInfoViewLoader();
         setSearchField();
+
+        if(tempOwner == null) {
+            Platform.runLater(() -> tempOwner = getThisWindow());
+        }
     }
 
     private void setTableItems() {
@@ -88,6 +96,7 @@ public class ClientsController implements Initializable {
         try {
             loader = new FXMLLoader(getClass().getResource(clientInfoViewLocation));
             clientInfoView = loader.load();
+            clientInfoscene = new Scene(clientInfoView);
             clientINFOController = loader.getController();
             ControllerManager.setClientINFOController(clientINFOController);
         } catch (IOException e) {
@@ -110,26 +119,37 @@ public class ClientsController implements Initializable {
     }
 
     private Window getThisWindow() {
-        return clientsTable.getScene().getWindow();
+        return ControllerManager.getRootViewController().mainBorderPane.getScene().getWindow();
     }
 
     public void showClientInfoView(boolean isNewClient, Window owner) {
-        if (clientInfoStage == null) {
+        if (clientInfoStage == null || tempOwner != owner) {
             clientInfoStage = new Stage();
-            setStage(owner, clientInfoStage, "Данные клиента", clientInfoView);
+            setStage(owner, clientInfoStage, "Данные клиента", clientInfoscene);
         }
+
+
         setClientINFOController(isNewClient);
-        clientInfoShowAndWait();
+
+        getStage(owner).hide();
+        clientInfoShowAndWait(owner);
+        getStage(owner).show();
     }
 
     public void openClientInfoWindowFromNewPayment(boolean isNewClient, Window owner) {
-        if (clientInfoStage == null) {
+        if (clientInfoStage == null || tempOwner != owner) {
             clientInfoStage = new Stage();
-            setStage(owner, clientInfoStage, "Данные клиента", clientInfoView);
+            setStage(owner, clientInfoStage, "Данные клиента", clientInfoscene);
         }
+
         setClientINFOController(isNewClient);
 
-        clientInfoShowAndWait();
+        clientInfoShowAndWait(owner);
+    }
+
+    private Stage getStage(Window window) {
+        Stage stage = (Stage) window;
+        return stage;
     }
 
     private void setClientINFOController(boolean isNewClient) {
@@ -142,18 +162,18 @@ public class ClientsController implements Initializable {
         } else {
             clientINFOController.setClient(null);
         }
+        FocusRepeater.repeat(clientINFOController.nameTextField);
     }
 
-    private void setStage(Window owner, Stage stage, String title, Pane view) {
+    private void setStage(Window owner, Stage stage, String title, Scene scene) {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(owner);
         stage.setTitle(title);
         stage.setResizable(false);
-        Scene scene = new Scene(view);
         stage.setScene(scene);
     }
 
-    private void clientInfoShowAndWait() {
+    private void clientInfoShowAndWait(Window owner) {
         clientInfoStage.showAndWait();
         clientsTable.sort();
     }

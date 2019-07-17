@@ -13,9 +13,15 @@ public class OrderTableManager implements TableManager<Order> {
     private static OrderDAO orderDAO;
 
     public OrderTableManager() {
-        orderList = FXCollections.observableArrayList();
-        backupOrderList = FXCollections.observableArrayList();
-        orderDAO = new OrderDAO();
+        if(orderList == null) {
+            orderList = FXCollections.observableArrayList();
+        }
+        if(backupOrderList == null) {
+            backupOrderList = FXCollections.observableArrayList();
+        }
+        if(orderDAO == null) {
+            orderDAO = new OrderDAO();
+        }
         fillData();
     }
 

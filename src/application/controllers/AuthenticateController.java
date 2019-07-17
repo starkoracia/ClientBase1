@@ -6,6 +6,7 @@ import application.sql.connectors.SessionConnector;
 import application.util.AlertCaster;
 import application.util.ClearedButtonSetter;
 import application.sql.HibernateSessionFactory;
+import application.util.ControllerManager;
 import application.util.UserSetter;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,8 +18,10 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.controlsfx.control.textfield.CustomPasswordField;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.hibernate.Session;
@@ -49,12 +52,14 @@ public class AuthenticateController implements Initializable {
     private String appName;
     private ResourceBundle resources;
     private Preferences loginPreferences;
-    private RegistrationController controller;
+    private RegistrationController registrationController;
     private User loginUser;
     private FXMLLoader registrationloader;
-    private FXMLLoader mainProgramloader;
+    private FXMLLoader rootViewloader;
     private AnchorPane registrationView;
     private BorderPane rootViewPane;
+
+    private RootViewController rootViewController;
 
     public AuthenticateController() {
         userService = new UserService();
@@ -87,7 +92,7 @@ public class AuthenticateController implements Initializable {
         try {
             registrationloader = new FXMLLoader(getClass().getResource(registrationViewLocation));
             registrationView = registrationloader.load();
-            controller = registrationloader.getController();
+            registrationController = registrationloader.getController();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -96,17 +101,31 @@ public class AuthenticateController implements Initializable {
     private void showRegistrationWindow() {
         if (registrationStage == null) {
             registrationStage = new Stage();
-            registrationStage.initModality(Modality.WINDOW_MODAL);
-            registrationStage.initOwner(authenticateStage);
-            registrationStage.setScene(new Scene(registrationView));
-            registrationStage.setResizable(false);
+            setStage(getThisWindow(), registrationStage, "Регистрация", registrationView);
         }
-        controller.setAuthenticateStage(authenticateStage);
-        controller.setRegistrationStage(registrationStage);
+        setRegistrationController();
 
+        registrationShowAndWait();
+    }
+
+    private void setStage(Window owner, Stage newWindowStage, String title, Pane view) {
+        newWindowStage.initModality(Modality.WINDOW_MODAL);
+        newWindowStage.initOwner(owner);
+        newWindowStage.setTitle(title);
+        newWindowStage.setResizable(false);
+        Scene scene = new Scene(view);
+        newWindowStage.setScene(scene);
+    }
+
+    private void setRegistrationController() {
+        registrationController.setAuthenticateStage(authenticateStage);
+        registrationController.setRegistrationStage(registrationStage);
+    }
+
+    private void registrationShowAndWait() {
         authenticateStage.hide();
         registrationStage.showAndWait();
-        if (controller.isNewUserAdded()) {
+        if (registrationController.isNewUserAdded()) {
             initLastLoginedInfo();
         }
         authenticateStage.show();
@@ -133,7 +152,7 @@ public class AuthenticateController implements Initializable {
         if (isLoginInfoValid()) {
             putLoginPreferences();
             UserSetter.setUser(loginUser);
-            AlertCaster.castInfoAlert("Вы успешно залогинились!");
+//            AlertCaster.castInfoAlert("Вы успешно залогинились!");
             closeAuthenticatesWindows();
             HibernateSessionFactory.setConnectionUrlLogin(loginUser.getLogin());
 
@@ -157,13 +176,16 @@ public class AuthenticateController implements Initializable {
 
     private void showMainProgramView() {
         try {
-            mainProgramloader = new FXMLLoader(getClass().getResource(rootViewLocation));
-            mainProgramloader.setResources(resources);
+            rootViewloader = new FXMLLoader(getClass().getResource(rootViewLocation));
+            rootViewPane = rootViewloader.load();
 
-            rootViewPane = mainProgramloader.load();
+            rootViewController = rootViewloader.getController();
+            ControllerManager.setRootViewController(rootViewController);
+
             rootStage = new Stage();
             rootStage.setScene(new Scene(rootViewPane));
 
+            rootViewController.setRootViewStage(rootStage);
             setOnCloseRequest();
 
             rootStage.show();
@@ -183,6 +205,10 @@ public class AuthenticateController implements Initializable {
                 sessionFactory.close();
             }
         });
+    }
+
+    public Window getThisWindow() {
+        return loginTextField.getScene().getWindow();
     }
 
     private boolean isLoginInfoValid() {

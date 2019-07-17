@@ -1,9 +1,6 @@
 package application.util;
 
-import application.controllers.ClientINFOController;
-import application.controllers.ClientsController;
-import application.controllers.NewPaymentController;
-import application.controllers.PaymentsController;
+import application.controllers.*;
 
 public class ControllerManager {
 
@@ -11,6 +8,8 @@ public class ControllerManager {
     private static PaymentsController paymentsController;
     private static NewPaymentController newPaymentController;
     private static ClientINFOController clientINFOController;
+    private static OrdersController ordersController;
+    private static RootViewController rootViewController;
 
     public ControllerManager() {
     }
@@ -20,7 +19,9 @@ public class ControllerManager {
     }
 
     public static void setClientsController(ClientsController clientsController) {
-        ControllerManager.clientsController = clientsController;
+        if(ControllerManager.clientsController == null) {
+            ControllerManager.clientsController = clientsController;
+        }
     }
 
     public static PaymentsController getPaymentsController() {
@@ -28,7 +29,9 @@ public class ControllerManager {
     }
 
     public static void setPaymentsController(PaymentsController paymentsController) {
-        ControllerManager.paymentsController = paymentsController;
+        if(ControllerManager.paymentsController == null) {
+            ControllerManager.paymentsController = paymentsController;
+        }
     }
 
     public static NewPaymentController getNewPaymentController() {
@@ -36,7 +39,9 @@ public class ControllerManager {
     }
 
     public static void setNewPaymentController(NewPaymentController newPaymentController) {
-        ControllerManager.newPaymentController = newPaymentController;
+        if(ControllerManager.newPaymentController == null) {
+            ControllerManager.newPaymentController = newPaymentController;
+        }
     }
 
     public static ClientINFOController getClientINFOController() {
@@ -44,6 +49,28 @@ public class ControllerManager {
     }
 
     public static void setClientINFOController(ClientINFOController clientINFOController) {
-        ControllerManager.clientINFOController = clientINFOController;
+        if(ControllerManager.clientINFOController == null) {
+            ControllerManager.clientINFOController = clientINFOController;
+        }
+    }
+
+    public static OrdersController getOrdersController() {
+        return ordersController;
+    }
+
+    public static void setOrdersController(OrdersController ordersController) {
+        if(ControllerManager.ordersController == null) {
+            ControllerManager.ordersController = ordersController;
+        }
+    }
+
+    public static RootViewController getRootViewController() {
+        return rootViewController;
+    }
+
+    public static void setRootViewController(RootViewController rootViewController) {
+        if(ControllerManager.rootViewController == null) {
+            ControllerManager.rootViewController = rootViewController;
+        }
     }
 }

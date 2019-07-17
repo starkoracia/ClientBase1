@@ -1,6 +1,8 @@
 package application.controllers;
 
 import application.sql.entitys.work.Order;
+import application.util.ControllerManager;
+import application.util.FocusRepeater;
 import application.util.tablemanagers.OrderTableManager;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.event.ActionEvent;
@@ -16,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.controlsfx.control.textfield.CustomTextField;
 
 import java.io.IOException;
@@ -59,6 +62,7 @@ public class OrdersController implements Initializable {
         setCellDataValues();
 
         initNewOrderViewLoader();
+        setSortTable();
 
     }
 
@@ -78,6 +82,12 @@ public class OrdersController implements Initializable {
         ordersTable.setItems(orderTableManager.getBackupObservableList());
     }
 
+    private void setSortTable() {
+        ordersTable.getSortOrder().add(deadlineColumn);
+        deadlineColumn.setSortType(TableColumn.SortType.DESCENDING);
+        ordersTable.sort();
+    }
+
     private void makeHotFilterPanelsInvisible() {
         pendingPaymentOrdersFilterAnchorPane.setVisible(false);
         quicklyOrdersFilterAnchorPane.setVisible(false);
@@ -95,22 +105,40 @@ public class OrdersController implements Initializable {
     }
 
     public void showNewOrderView() {
-        if(newOrderStage == null) {
+        if (newOrderStage == null) {
             newOrderStage = new Stage();
-            setStage(newOrderStage,"Новый заказ", newOrderView);
+            setStage(getThisWindow(), newOrderStage, "Новый заказ", newOrderView);
         }
-
-        newOrderStage.showAndWait();
+        setNewOrderController();
+        newOrderShowAndWait();
     }
 
-    private void setStage(Stage stage, String title, Pane view) {
+    private void setStage(Window owner, Stage stage, String title, Pane view) {
         stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(ordersTable.getScene().getWindow());
+        stage.initOwner(owner);
         stage.setTitle(title);
         stage.setResizable(false);
         Scene scene = new Scene(view);
         stage.setScene(scene);
     }
+
+    private void setNewOrderController() {
+        newOrderController.setNewOrederStage(newOrderStage);
+        newOrderController.clearInfoTextFields();
+        FocusRepeater.repeat(newOrderController.clientComboBox.getEditor());
+    }
+
+    private void newOrderShowAndWait() {
+        ControllerManager.getRootViewController().getRootViewStage().hide();
+        newOrderStage.showAndWait();
+        ordersTable.sort();
+        ControllerManager.getRootViewController().getRootViewStage().show();
+    }
+
+    private Window getThisWindow() {
+        return ControllerManager.getRootViewController().mainBorderPane.getScene().getWindow();
+    }
+
 
     public void newOrderButtonOnAction(ActionEvent actionEvent) {
         showNewOrderView();
@@ -122,10 +150,13 @@ public class OrdersController implements Initializable {
     public void mouseClickedSearch(MouseEvent mouseEvent) {
     }
 
-    public void pressedEnter(KeyEvent keyEvent) {
+    public void pressedEnterTable(KeyEvent keyEvent) {
     }
 
     public void onMouseClickedTable(MouseEvent mouseEvent) {
+        if(mouseEvent.getClickCount() == 2) {
+
+        }
     }
 
     public void pendingPaymentOnMouseClicked(MouseEvent mouseEvent) {

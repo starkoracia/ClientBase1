@@ -12,43 +12,28 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class RootViewController implements Initializable {
 
-
     private final String clientsViewLocation = "../view/Clients.fxml";
-
     private final String stockViewLocation = "../view/Stock.fxml";
-
     private final String storeViewLocation = "../view/Store.fxml";
-
     private final String paymentsViewLocation = "../view/Payments.fxml";
-
     private final String ordersViewLocation = "../view/Orders.fxml";
 
-    @FXML
-    private URL location;
-
-    @FXML
-    private TabPane mainTabPane;
-
-    @FXML
-    private Tab clientsTab;
-
-    @FXML
-    private Tab stockTab;
-
-    @FXML
-    private Tab storeTab;
-
-    @FXML
-    private Tab reportsTab;
-
-    @FXML
-    private Tab paymentsTab;
-
+    public BorderPane mainBorderPane;
+    public TabPane mainTabPane;
+    public Tab clientsTab;
+    public Tab stockTab;
+    public Tab storeTab;
+    public Tab reportsTab;
+    public Tab paymentsTab;
     public Tab ordersTab;
+
+    private Stage rootViewStage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,6 +49,7 @@ public class RootViewController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(ordersViewLocation));
             AnchorPane ordersView = loader.load();
             ordersTab.setContent(ordersView);
+            ControllerManager.setOrdersController(loader.getController());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,5 +98,13 @@ public class RootViewController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setRootViewStage(Stage rootViewStage) {
+        this.rootViewStage = rootViewStage;
+    }
+
+    public Stage getRootViewStage() {
+        return rootViewStage;
     }
 }

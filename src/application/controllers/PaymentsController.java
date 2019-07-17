@@ -14,11 +14,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -57,6 +55,8 @@ public class PaymentsController implements Initializable {
     private Stage newPaymentStage;
     private Stage paymentInfoStage;
     private AnchorPane paymentInfoView;
+    private Scene newPaymentScene;
+    private Scene paymentInfoScene;
 
     public PaymentsController() {
         balance = new SimpleStringProperty();
@@ -73,7 +73,7 @@ public class PaymentsController implements Initializable {
         initNewPaymentViewLoader();
         initPaymentInfoViewLoader();
 
-        sortTable();
+        setSortTable();
     }
 
     private void setSearchField() {
@@ -86,7 +86,7 @@ public class PaymentsController implements Initializable {
     }
 
     private Window getThisWindow() {
-        return paymentsTable.getScene().getWindow();
+        return ControllerManager.getRootViewController().mainBorderPane.getScene().getWindow();
     }
 
     private void setBalance() {
@@ -149,7 +149,7 @@ public class PaymentsController implements Initializable {
         });
     }
 
-    private void sortTable() {
+    private void setSortTable() {
         paymentsTable.getSortOrder().add(dateTableColumn);
         dateTableColumn.setSortType(TableColumn.SortType.DESCENDING);
         paymentsTable.sort();
@@ -160,7 +160,7 @@ public class PaymentsController implements Initializable {
     }
 
     private void addBalanceChangeListener() {
-        paymentTableManager.getObservableList().addListener((ListChangeListener<? super Payment>) c ->
+        paymentTableManager.getBackupObservableList().addListener((ListChangeListener<? super Payment>) c ->
                 setBalanceProperty());
     }
 
@@ -215,6 +215,7 @@ public class PaymentsController implements Initializable {
         try {
             newPaymentloader = new FXMLLoader(getClass().getResource(newPaymentLocation));
             newPaymentView = newPaymentloader.load();
+            newPaymentScene = new Scene(newPaymentView);
             newPaymentController = newPaymentloader.getController();
             ControllerManager.setNewPaymentController(newPaymentController);
         } catch (IOException e) {
@@ -226,6 +227,7 @@ public class PaymentsController implements Initializable {
         try {
             paymentInfoloader = new FXMLLoader(getClass().getResource(paymentInfoLocation));
             paymentInfoView = paymentInfoloader.load();
+            paymentInfoScene = new Scene(paymentInfoView);
             paymentInfoController = paymentInfoloader.getController();
         } catch (IOException e) {
             e.printStackTrace();
@@ -235,20 +237,25 @@ public class PaymentsController implements Initializable {
     private void showNewPaymentView(boolean isInCome, Window owner) {
         if (newPaymentStage == null) {
             newPaymentStage = new Stage();
-            setStage(owner, newPaymentStage, "Новый платеж", newPaymentView);
         }
+            setStage(owner, newPaymentStage, "Новый платеж", newPaymentScene);
+
         setNewPaymentController(isInCome);
-        newPaymentShowAndWait();
+
+        getStage(owner).hide();
+        newPaymentShowAndWait(owner);
+        getStage(owner).show();
     }
 
     public void openNewPaymentWindowFromClientINFO(boolean isInCome, Window owner, Client client) {
         if (newPaymentStage == null) {
             newPaymentStage = new Stage();
-            setStage(owner, newPaymentStage, "Новый платеж", newPaymentView);
+            setStage(owner, newPaymentStage, "Новый платеж", newPaymentScene);
         }
         setNewPaymentController(isInCome);
         newPaymentController.setFromClientINFO(client);
-        newPaymentShowAndWait();
+
+        newPaymentShowAndWait(owner);
     }
 
     private void setNewPaymentController(boolean isInCome) {
@@ -256,32 +263,35 @@ public class PaymentsController implements Initializable {
         newPaymentController.clearInfoTextFields();
         newPaymentController.setInComePayment(isInCome);
         newPaymentController.setStartBalance(getCalculateBalance().toString());
-        newPaymentController.setPaymentTableManager(paymentTableManager);
         newPaymentController.setNewPaymentStage(newPaymentStage);
         newPaymentController.amountTextField.requestFocus();
         newPaymentController.setNewPaymentAdded(false);
     }
 
-    private void newPaymentShowAndWait() {
+    private void newPaymentShowAndWait(Window owner) {
         newPaymentStage.showAndWait();
         paymentsTable.sort();
+    }
+
+    private Stage getStage(Window window) {
+        Stage stage = (Stage) window;
+        return stage;
     }
 
     private void showPaymentInfoView(Payment selectedItem) {
         if (paymentInfoStage == null) {
             paymentInfoStage = new Stage();
-            setStage(getThisWindow(), paymentInfoStage, "Данные платежа", paymentInfoView);
+            setStage(getThisWindow(), paymentInfoStage, "Данные платежа", paymentInfoScene);
         }
         paymentInfoController.setPayment(selectedItem);
         paymentInfoStage.showAndWait();
     }
 
-    private void setStage(Window owner, Stage stage, String title, Pane view) {
+    private void setStage(Window owner, Stage stage, String title, Scene scene) {
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(owner);
         stage.setTitle(title);
         stage.setResizable(false);
-        Scene scene = new Scene(view);
         stage.setScene(scene);
     }
 

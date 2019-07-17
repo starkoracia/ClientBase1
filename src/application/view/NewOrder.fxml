@@ -18,9 +18,9 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.NewOrderController">
+<AnchorPane fx:id="mainAnchorPane" maxHeight="750.0" maxWidth="610.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.NewOrderController">
     <children>
-        <ScrollPane hbarPolicy="NEVER" maxHeight="750.0" prefWidth="610.0" vbarPolicy="ALWAYS">
+        <ScrollPane hbarPolicy="NEVER" maxHeight="750.0" minHeight="750.0" prefHeight="750.0" prefWidth="610.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <content>
                 <AnchorPane prefWidth="610.0">
                     <children>
@@ -161,7 +161,7 @@
                                                 <Insets top="10.0" />
                                             </VBox.margin>
                                         </Label>
-                                        <TextArea fx:id="malfunctionTextArea" prefHeight="74.0" prefWidth="570.0">
+                                        <TextArea fx:id="malfunctionTextArea" onKeyPressed="#malfunctionOnKPressed" onKeyReleased="#malfunctionOnKReleased" prefHeight="74.0" prefWidth="570.0">
                                             <VBox.margin>
                                                 <Insets bottom="5.0" right="10.0" />
                                             </VBox.margin>
@@ -189,7 +189,7 @@
                                                 <Insets top="10.0" />
                                             </VBox.margin>
                                         </Label>
-                                        <TextArea fx:id="equipmentTextArea" maxWidth="570.0" prefHeight="82.0" prefWidth="580.0" />
+                                        <TextArea fx:id="equipmentTextArea" maxWidth="570.0" onKeyPressed="#equipmentTAreaOnKPressed" onKeyReleased="#equipmentTAreaOnKReleased" prefHeight="82.0" prefWidth="580.0" />
                                         <Line endX="470.29290771484375" endY="-1.0355340242385864" startX="-100.0" stroke="#ffb2b2" strokeWidth="5.0">
                                             <VBox.margin>
                                                 <Insets bottom="15.0" top="15.0" />
@@ -214,7 +214,7 @@
                                                 <Insets top="15.0" />
                                             </VBox.margin>
                                         </Label>
-                                        <TextArea fx:id="acceptorTextArea" maxWidth="570.0" prefHeight="82.0" prefWidth="580.0" />
+                                        <TextArea fx:id="acceptorTextArea" maxWidth="570.0" onKeyPressed="#acceptorTAreaOnKPressed" onKeyReleased="#acceptorTAreaOnKReleased" prefHeight="82.0" prefWidth="580.0" />
                                         <Label prefHeight="13.0" prefWidth="185.0" text="Ориентировочная цена">
                                             <font>
                                                 <Font name="Comic Sans MS" size="16.0" />

@@ -13,9 +13,15 @@ public class PaymentTableManager implements TableManager<Payment> {
     private static PaymentDAO paymentDAO;
 
     public PaymentTableManager() {
-        paymentList = FXCollections.observableArrayList();
-        backupPaymentList = FXCollections.observableArrayList();
-        paymentDAO = new PaymentDAO();
+        if(paymentList == null) {
+            paymentList = FXCollections.observableArrayList();
+        }
+        if(backupPaymentList == null) {
+            backupPaymentList = FXCollections.observableArrayList();
+        }
+        if(paymentDAO == null) {
+            paymentDAO = new PaymentDAO();
+        }
         fillData();
     }
 

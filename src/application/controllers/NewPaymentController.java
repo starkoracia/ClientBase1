@@ -61,7 +61,10 @@ public class NewPaymentController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initFields();
+        setComboBoxes();
+    }
 
+    private void setComboBoxes() {
         setComboBoxItems();
         setComboBoxConvertors();
         setClientComboBoxAutoCompletion();
@@ -80,6 +83,7 @@ public class NewPaymentController implements Initializable {
         clientDAO = new ClientDAO();
         articleDAO = new PaymentArticleDAO();
         employeeDAO = new EmployeeDAO();
+        paymentTableManager = new PaymentTableManager();
     }
 
     private void setComboBoxItems() {
@@ -102,7 +106,7 @@ public class NewPaymentController implements Initializable {
     }
 
     private void addNewPayment() {
-        paymentTableManager.add(createPaymentFromTextFields());
+        paymentTableManager.add(createPaymentFromFields());
         isNewPaymentAdded = true;
     }
 
@@ -117,7 +121,7 @@ public class NewPaymentController implements Initializable {
         }
     }
 
-    private Payment createPaymentFromTextFields() {
+    private Payment createPaymentFromFields() {
         newPayment = new Payment(
                 isInComePayment(),
                 LocalDateTime.of(paymentDatePicker.getValue(), LocalTime.now()),
@@ -214,6 +218,10 @@ public class NewPaymentController implements Initializable {
     }
 
     public void onActionNewClientButton(ActionEvent actionEvent) {
+        openNewClientWindow();
+    }
+
+    private void openNewClientWindow() {
         ControllerManager.getClientsController().openClientInfoWindowFromNewPayment(true, getThisWindow());
         ClientINFOController clientINFOController = ControllerManager.getClientINFOController();
 

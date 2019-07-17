@@ -12,168 +12,120 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.textfield.CustomTextField?>
 
-<AnchorPane prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.OrdersController">
+<AnchorPane prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controllers.OrdersController">
     <children>
-        <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="100.0" minHeight="100.0" prefHeight="30.0"
-                    style="-fx-background-color: #2e3348;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="0.0">
+        <AnchorPane layoutX="10.0" layoutY="10.0" maxHeight="100.0" minHeight="100.0" prefHeight="30.0" style="-fx-background-color: #2e3348;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Button fx:id="newOrderButton" layoutX="21.0" layoutY="51.0" maxHeight="38.0" maxWidth="100.0"
-                        minHeight="38.0" minWidth="100.0" mnemonicParsing="false" onAction="#newOrderButtonOnAction"
-                        prefHeight="32.0" prefWidth="116.0"
-                        style="-fx-background-color: #63e440; -fx-border-color: white; -fx-border-radius: 3; -fx-border-width: 2;"
-                        AnchorPane.leftAnchor="21.0" AnchorPane.topAnchor="50.0">
+                <Button fx:id="newOrderButton" layoutX="21.0" layoutY="51.0" maxHeight="38.0" maxWidth="100.0" minHeight="38.0" minWidth="100.0" mnemonicParsing="false" onAction="#newOrderButtonOnAction" prefHeight="32.0" prefWidth="116.0" style="-fx-background-color: #63e440; -fx-border-color: white; -fx-border-radius: 3; -fx-border-width: 2;" AnchorPane.leftAnchor="21.0" AnchorPane.topAnchor="50.0">
                     <cursor>
-                        <Cursor fx:constant="HAND"/>
+                        <Cursor fx:constant="HAND" />
                     </cursor>
                     <padding>
-                        <Insets top="2.0"/>
+                        <Insets top="2.0" />
                     </padding>
                     <graphic>
                         <AnchorPane>
                             <children>
-                                <FontAwesomeIconView fill="#404040" glyphName="GEAR" layoutX="18.0" size="35"
-                                                     AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="0.0"/>
-                                <FontAwesomeIconView fill="WHITE" glyphName="PLUS" layoutY="2.0" size="33"
-                                                     wrappingWidth="21.428571701049805" AnchorPane.rightAnchor="52.0"
-                                                     AnchorPane.topAnchor="2.0"/>
+                                <FontAwesomeIconView fill="#404040" glyphName="GEAR" layoutX="18.0" size="35" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="0.0" />
+                                <FontAwesomeIconView fill="WHITE" glyphName="PLUS" layoutY="2.0" size="33" wrappingWidth="21.428571701049805" AnchorPane.rightAnchor="52.0" AnchorPane.topAnchor="2.0" />
                             </children>
                         </AnchorPane>
                     </graphic>
                 </Button>
-                <AnchorPane layoutX="574.0" layoutY="58.0" maxHeight="30.0" maxWidth="362.0" minHeight="30.0"
-                            minWidth="276.0" prefHeight="30.0" prefWidth="276.0"
-                            style="-fx-border-color: white; -fx-background-radius: 3; -fx-border-radius: 4;"
-                            AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="-5.0">
+                <AnchorPane layoutX="574.0" layoutY="58.0" maxHeight="30.0" maxWidth="362.0" minHeight="30.0" minWidth="276.0" prefHeight="30.0" prefWidth="276.0" style="-fx-border-color: white; -fx-background-radius: 3; -fx-border-radius: 4;" AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="-5.0">
                     <children>
-                        <CustomTextField fx:id="searchTextField" maxHeight="30.0" minWidth="280.0"
-                                         onKeyPressed="#onPressedKeySearchField" prefHeight="30.0" prefWidth="300.0"
-                                         AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                                         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <CustomTextField fx:id="searchTextField" maxHeight="30.0" minWidth="280.0" onKeyPressed="#onPressedKeySearchField" prefHeight="30.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                             <padding>
-                                <Insets left="30.0"/>
+                                <Insets left="30.0" />
                             </padding>
                         </CustomTextField>
-                        <FontAwesomeIconView fx:id="searchIcon" glyphName="SEARCH" layoutX="2.0" layoutY="23.0"
-                                             onMouseClicked="#mouseClickedSearch" size="22"
-                                             wrappingWidth="24.571428298950195" AnchorPane.leftAnchor="5.0"
-                                             AnchorPane.topAnchor="3.0">
+                        <FontAwesomeIconView fx:id="searchIcon" glyphName="SEARCH" layoutX="2.0" layoutY="23.0" onMouseClicked="#mouseClickedSearch" size="22" wrappingWidth="24.571428298950195" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="3.0">
                             <cursor>
-                                <Cursor fx:constant="HAND"/>
+                                <Cursor fx:constant="HAND" />
                             </cursor>
                         </FontAwesomeIconView>
                     </children>
                 </AnchorPane>
-                <Label layoutX="6.0" layoutY="14.0" prefHeight="14.0" prefWidth="170.0" text="Заказы"
-                       textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
+                <Label layoutX="6.0" layoutY="14.0" prefHeight="14.0" prefWidth="170.0" text="Заказы" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0">
                     <font>
-                        <Font name="Comic Sans MS" size="36.0"/>
+                        <Font name="Comic Sans MS" size="36.0" />
                     </font>
                     <padding>
-                        <Insets top="-10.0"/>
+                        <Insets top="-10.0" />
                     </padding>
                 </Label>
-                <AnchorPane fx:id="pendingPaymentOrdersFilterAnchorPane" layoutX="650.0" layoutY="3.0" maxHeight="52.0"
-                            maxWidth="160.0" minHeight="52.0" minWidth="160.0"
-                            onMouseClicked="#pendingPaymentOnMouseClicked"
-                            style="-fx-background-color: grey; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: white;"
-                            AnchorPane.rightAnchor="-5.0" AnchorPane.topAnchor="5.0">
+                <AnchorPane fx:id="pendingPaymentOrdersFilterAnchorPane" layoutX="650.0" layoutY="3.0" maxHeight="52.0" maxWidth="160.0" minHeight="52.0" minWidth="160.0" onMouseClicked="#pendingPaymentOnMouseClicked" style="-fx-background-color: grey; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: white;" AnchorPane.rightAnchor="-5.0" AnchorPane.topAnchor="5.0">
                     <children>
-                        <MaterialDesignIconView fill="WHITE" glyphName="CART" layoutX="7.0" layoutY="42.0" size="40"
-                                                AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0"/>
-                        <Label layoutX="48.0" layoutY="28.0" text="Ждут оплаты" textFill="WHITE"
-                               AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="14.0">
+                        <MaterialDesignIconView fill="WHITE" glyphName="CART" layoutX="7.0" layoutY="42.0" size="40" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                        <Label layoutX="48.0" layoutY="28.0" text="Ждут оплаты" textFill="WHITE" AnchorPane.bottomAnchor="2.0" AnchorPane.rightAnchor="14.0">
                             <font>
-                                <Font name="Comic Sans MS" size="14.0"/>
+                                <Font name="Comic Sans MS" size="14.0" />
                             </font>
                         </Label>
-                        <Label layoutX="57.0" text="4100 грн" textFill="WHITE" AnchorPane.rightAnchor="16.0"
-                               AnchorPane.topAnchor="2.0">
+                        <Label layoutX="57.0" text="4100 грн" textFill="WHITE" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="2.0">
                             <font>
-                                <Font name="Comic Sans MS Bold" size="20.0"/>
+                                <Font name="Comic Sans MS Bold" size="20.0" />
                             </font>
                         </Label>
                     </children>
                     <cursor>
-                        <Cursor fx:constant="HAND"/>
+                        <Cursor fx:constant="HAND" />
                     </cursor>
                 </AnchorPane>
-                <AnchorPane fx:id="quicklyOrdersFilterAnchorPane" layoutX="530.0" layoutY="5.0" maxHeight="52.0"
-                            maxWidth="160.0" minHeight="52.0" minWidth="160.0"
-                            onMouseClicked="#quicklyOrdersOnMouseClicked"
-                            style="-fx-background-color: #ff4444; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: white;"
-                            AnchorPane.rightAnchor="165.0">
+                <AnchorPane fx:id="quicklyOrdersFilterAnchorPane" layoutX="530.0" layoutY="5.0" maxHeight="52.0" maxWidth="160.0" minHeight="52.0" minWidth="160.0" onMouseClicked="#quicklyOrdersOnMouseClicked" style="-fx-background-color: #ff4444; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: white;" AnchorPane.rightAnchor="165.0">
                     <children>
-                        <MaterialDesignIconView fill="WHITE" glyphName="RADIOACTIVE" layoutY="43.0" size="44"
-                                                AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="2.0"/>
-                        <Label layoutX="62.0" layoutY="28.0" text="Срочных" textFill="WHITE"
-                               AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="17.0">
+                        <MaterialDesignIconView fill="WHITE" glyphName="RADIOACTIVE" layoutY="43.0" size="44" AnchorPane.leftAnchor="1.0" AnchorPane.topAnchor="2.0" />
+                        <Label layoutX="62.0" layoutY="28.0" text="Срочных" textFill="WHITE" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="17.0">
                             <font>
-                                <Font name="Comic Sans MS" size="14.0"/>
+                                <Font name="Comic Sans MS" size="14.0" />
                             </font>
                         </Label>
                         <Label layoutX="45.0" text="11 заказов" textFill="WHITE" AnchorPane.rightAnchor="5.0">
                             <font>
-                                <Font name="Comic Sans MS Bold" size="20.0"/>
+                                <Font name="Comic Sans MS Bold" size="20.0" />
                             </font>
                         </Label>
                     </children>
                     <cursor>
-                        <Cursor fx:constant="HAND"/>
+                        <Cursor fx:constant="HAND" />
                     </cursor>
                 </AnchorPane>
-                <AnchorPane fx:id="myOrdersFilterAnchorPane" layoutX="363.0" layoutY="5.0" maxHeight="52.0"
-                            maxWidth="160.0" minHeight="52.0" minWidth="160.0" onMouseClicked="#myOrdersOnMouseClicked"
-                            style="-fx-background-color: green; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: white;"
-                            AnchorPane.rightAnchor="335.0">
+                <AnchorPane fx:id="myOrdersFilterAnchorPane" layoutX="363.0" layoutY="5.0" maxHeight="52.0" maxWidth="160.0" minHeight="52.0" minWidth="160.0" onMouseClicked="#myOrdersOnMouseClicked" style="-fx-background-color: green; -fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: white;" AnchorPane.rightAnchor="335.0">
                     <children>
-                        <MaterialDesignIconView fill="WHITE" glyphName="WRENCH" layoutY="40.0" size="38"
-                                                AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="7.0"/>
-                        <Label layoutX="50.0" layoutY="28.0" text="Мои заказы" textFill="WHITE"
-                               AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="16.0">
+                        <MaterialDesignIconView fill="WHITE" glyphName="WRENCH" layoutY="40.0" size="38" AnchorPane.leftAnchor="6.0" AnchorPane.topAnchor="7.0" />
+                        <Label layoutX="50.0" layoutY="28.0" text="Мои заказы" textFill="WHITE" AnchorPane.bottomAnchor="3.0" AnchorPane.rightAnchor="16.0">
                             <font>
-                                <Font name="Comic Sans MS" size="14.0"/>
+                                <Font name="Comic Sans MS" size="14.0" />
                             </font>
                         </Label>
                         <Label layoutX="54.0" text="3 заказов" textFill="WHITE" AnchorPane.rightAnchor="10.0">
                             <font>
-                                <Font name="Comic Sans MS Bold" size="20.0"/>
+                                <Font name="Comic Sans MS Bold" size="20.0" />
                             </font>
                         </Label>
                     </children>
                 </AnchorPane>
             </children>
             <padding>
-                <Insets right="12.0"/>
+                <Insets right="12.0" />
             </padding>
         </AnchorPane>
-        <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="313.0" prefWidth="580.0"
-                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                    AnchorPane.topAnchor="100.0">
+        <AnchorPane layoutX="10.0" layoutY="10.0" minHeight="0.0" minWidth="0.0" prefHeight="313.0" prefWidth="580.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
             <children>
-                <TableView fx:id="ordersTable" onKeyPressed="#pressedEnter" onMouseClicked="#onMouseClickedTable"
-                           prefHeight="448.0" prefWidth="245.0" AnchorPane.bottomAnchor="0.0"
-                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TableView fx:id="ordersTable" onKeyPressed="#pressedEnterTable" onMouseClicked="#onMouseClickedTable" prefHeight="448.0" prefWidth="245.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <columns>
-                        <TableColumn fx:id="orderNumberColumn" maxWidth="1000.0" prefWidth="60.0" text="Заказ №"/>
-                        <TableColumn fx:id="statusColumn" maxWidth="2000.0" minWidth="0.0" prefWidth="138.0"
-                                     sortType="DESCENDING" text="Статус"/>
-                        <TableColumn fx:id="deadlineColumn" maxWidth="1000.0" minWidth="56.0" prefWidth="168.0"
-                                     text="Крайний срок"/>
-                        <TableColumn fx:id="productTypeColumn" maxWidth="1100.0" minWidth="125.0" prefWidth="140.0"
-                                     text="Тип изделия"/>
-                        <TableColumn fx:id="modelColumn" maxWidth="2000.0" minWidth="56.0" prefWidth="191.0"
-                                     text="Модель"/>
-                        <TableColumn fx:id="malfunctionColumn" maxWidth="2000.0" minWidth="38.0" prefWidth="262.0"
-                                     text="Неисправность"/>
-                        <TableColumn fx:id="clientColumn" maxWidth="3000.0" prefWidth="75.0" text="Клиент"/>
-                        <TableColumn fx:id="amountColumn" maxWidth="2000.0" prefWidth="75.0" text="Цена"/>
-                        <TableColumn fx:id="doerNoteColumn" maxWidth="3000.0" prefWidth="75.0"
-                                     text="Заметки исполнителя"/>
+                        <TableColumn fx:id="orderNumberColumn" maxWidth="1000.0" prefWidth="60.0" text="Заказ №" />
+                        <TableColumn fx:id="statusColumn" maxWidth="1500.0" minWidth="0.0" prefWidth="138.0" sortType="DESCENDING" text="Статус" />
+                        <TableColumn fx:id="deadlineColumn" maxWidth="1000.0" minWidth="56.0" prefWidth="168.0" text="Крайний срок" />
+                        <TableColumn fx:id="productTypeColumn" maxWidth="1100.0" minWidth="125.0" prefWidth="158.0" text="Тип изделия" />
+                        <TableColumn fx:id="modelColumn" maxWidth="1000.0" minWidth="56.0" prefWidth="68.0" text="Модель" />
+                        <TableColumn fx:id="malfunctionColumn" maxWidth="2000.0" minWidth="38.0" prefWidth="156.0" text="Неисправность" />
+                        <TableColumn fx:id="clientColumn" maxWidth="3000.0" prefWidth="75.0" text="Клиент" />
+                        <TableColumn fx:id="amountColumn" maxWidth="1500.0" prefWidth="75.0" text="Цена" />
+                        <TableColumn fx:id="doerNoteColumn" maxWidth="3000.0" prefWidth="75.0" text="Заметки исполнителя" />
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                     </columnResizePolicy>
                 </TableView>
             </children>

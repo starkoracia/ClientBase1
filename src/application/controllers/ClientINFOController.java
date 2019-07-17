@@ -9,15 +9,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 import java.net.URL;
+import java.util.ResourceBundle;
 
-public class ClientINFOController {
+public class ClientINFOController implements Initializable {
 
-    @FXML
+    public Label clientNameHeadLabel;
+    public TextField nameTextField;
     public TextField mobileTextField;
     public Button deleteButton;
     public Button saveButton;
@@ -40,18 +43,11 @@ public class ClientINFOController {
     private ClientTableManager clientTableManager;
     private boolean isNewClient;
 
-    @FXML
-    private URL location;
-
-    @FXML
-    private Label clientNameHeadLabel;
-
-    @FXML
-    private TextField nameTextField;
     private boolean isNewClientAdded;
 
-    @FXML
-    void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 
     public void setClient(Client client) {
@@ -61,8 +57,8 @@ public class ClientINFOController {
 
     public void setFieldsForClient() {
         if (client != null) {
-            setTabsDisable(false);
             setClientInfoInTextFields(client);
+            setTabsDisable(false);
             initPaymentsTable(client);
         } else {
             clearInfoTextFields();

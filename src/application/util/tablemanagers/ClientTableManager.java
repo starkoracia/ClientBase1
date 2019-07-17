@@ -14,9 +14,15 @@ public class ClientTableManager implements TableManager<Client> {
     private static ClientDAO clientDAO;
 
     public ClientTableManager() {
-        clientsList = FXCollections.observableArrayList();
-        backupClientsList = FXCollections.observableArrayList();
-        clientDAO = new ClientDAO();
+        if(clientsList == null) {
+            clientsList = FXCollections.observableArrayList();
+        }
+        if(backupClientsList == null) {
+            backupClientsList = FXCollections.observableArrayList();
+        }
+        if(clientDAO == null) {
+            clientDAO = new ClientDAO();
+        }
         fillData();
     }
 

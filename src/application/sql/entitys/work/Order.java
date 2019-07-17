@@ -7,6 +7,7 @@ import javafx.beans.value.ObservableValue;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -88,6 +89,18 @@ public class Order {
     private List<Payment> paymentList;
 
     public Order() {
+        initFields();
+    }
+
+    public Order(OrderStatus status, Boolean paid, Client client, LocalDateTime deadline) {
+        this();
+        this.status = status;
+        this.paid = paid;
+        this.client = client;
+        this.deadline = deadline;
+    }
+
+    private void initFields() {
         if(this.estimatedPrice == null) {
             this.estimatedPrice = "0";
         }
@@ -97,14 +110,12 @@ public class Order {
         if(this.prepayment == null) {
             this.prepayment = "0";
         }
-    }
-
-    public Order(OrderStatus status, Boolean paid, Client client, LocalDateTime deadline) {
-        this();
-        this.status = status;
-        this.paid = paid;
-        this.client = client;
-        this.deadline = deadline;
+        if(jobAndMaterialsList == null) {
+            jobAndMaterialsList = new ArrayList<>();
+        }
+        if(paymentList == null) {
+            paymentList = new ArrayList<>();
+        }
     }
 
     public Integer getId() {
