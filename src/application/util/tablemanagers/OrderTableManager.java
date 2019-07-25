@@ -28,7 +28,6 @@ public class OrderTableManager implements TableManager<Order> {
     @Override
     public void fillData() {
         updateAll();
-        makeBackupList();
     }
 
     @Override

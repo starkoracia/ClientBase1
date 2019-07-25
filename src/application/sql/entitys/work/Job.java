@@ -1,6 +1,9 @@
 package application.sql.entitys.work;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,15 +28,25 @@ public class Job {
     private List<JobAndMaterials> jobAndMaterialsList;
 
     public Job() {
-        if(this.warranty == null) {
-            this.warranty = 0;
-        }
+        initFields();
     }
 
     public Job(String name, String amount) {
         this();
         this.name = name;
         this.amount = amount;
+    }
+
+    private void initFields() {
+        if (this.warranty == null) {
+            this.warranty = 0;
+        }
+        if(this.amount == null) {
+            this.amount = "0";
+        }
+        if (jobAndMaterialsList == null) {
+            jobAndMaterialsList = new ArrayList<>();
+        }
     }
 
     public Integer getId() {
@@ -74,6 +87,20 @@ public class Job {
 
     public void setJobAndMaterialsList(List<JobAndMaterials> jobAndMaterialsList) {
         this.jobAndMaterialsList = jobAndMaterialsList;
+    }
+
+    public SimpleStringProperty nameProperty() {
+        return new SimpleStringProperty(getName());
+    }
+
+    public SimpleStringProperty priceProperty() {
+        return new SimpleStringProperty(getAmount());
+    }
+
+    public SimpleStringProperty nameAndAmountProperty() {
+        Double distance = (100 - getName().length() * 1.9);
+        String value = String.format("%s%" + distance.intValue() + "s грн.", getName(), getAmount());
+        return new SimpleStringProperty(value);
     }
 
     @Override

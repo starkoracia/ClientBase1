@@ -1,37 +1,23 @@
 import application.sql.HibernateSessionFactory;
-import application.sql.daos.*;
-import application.sql.entitys.work.*;
-import impl.org.controlsfx.autocompletion.AutoCompletionTextFieldBinding;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.regex.Pattern;
 
 public class SimpleMain {
     public static void main(String[] args) {
 
 
-        HibernateSessionFactory.setConnectionUrlLogin("paparacia1");
-        SessionFactory sessionFactory = HibernateSessionFactory.getSessionFactory();
-
-        OrderDAO orderDAO = new OrderDAO();
-        OrderStatusDAO orderStatusDAO = new OrderStatusDAO();
-        ClientDAO clientDAO = new ClientDAO();
-        EmployeeDAO employeeDAO = new EmployeeDAO();
-        JobAndMaterialsDAO jobAndMaterialsDAO = new JobAndMaterialsDAO();
-
-//        Order order = new Order(status, true, clientDAO.getByKey(6), LocalDateTime.now());
-
-        for(JobAndMaterials jobAndMaterials : orderDAO.getByKey(1).getJobAndMaterialsList()) {
-            System.out.println("1 =" + jobAndMaterials);
-        }
-
-
-
-        sessionFactory.close();
+//        HibernateSessionFactory.setConnectionUrlLogin("paparacia1");
+//        SessionFactory sessionFactory = HibernateSessionFactory.getSessionFactory();
+//        sessionFactory.close();
+        String s1 = "ffffffff";
+        String s2 = "ffffffffaaaaaaa";
+        String s3 = "ffffffffdd";
+        int v1 = 30 - s1.length();
+        System.out.println(String.format("|%s%" + v1 + "s|", s1, "150 uhy."));
+        int v2 = 30 - s2.length();
+        System.out.println(String.format("|%s%" + v2 + "s|", s2, "150 uhy."));
+        System.out.println(String.format("|%s%30s|", s3, "150 uhy."));
 
     }
 }

@@ -77,7 +77,7 @@ public class OrdersController implements Initializable {
     private void setCellDataValues() {
         orderNumberColumn.setCellValueFactory(param -> param.getValue().orderNumberProperty());
         statusColumn.setCellValueFactory(param -> param.getValue().statusProperty());
-        deadlineColumn.setCellValueFactory(param -> param.getValue().deadlineProperty());
+        deadlineColumn.setCellValueFactory(param -> param.getValue().deadlineDifferenceProperty());
         productTypeColumn.setCellValueFactory(param -> param.getValue().productTypeProperty());
         modelColumn.setCellValueFactory(param -> param.getValue().modelProperty());
         malfunctionColumn.setCellValueFactory(param -> param.getValue().malfunctionProperty());
@@ -91,8 +91,8 @@ public class OrdersController implements Initializable {
     }
 
     private void setSortTable() {
-        ordersTable.getSortOrder().add(deadlineColumn);
-        deadlineColumn.setSortType(TableColumn.SortType.DESCENDING);
+        ordersTable.getSortOrder().add(orderNumberColumn);
+        orderNumberColumn.setSortType(TableColumn.SortType.DESCENDING);
         ordersTable.sort();
     }
 
@@ -131,6 +131,7 @@ public class OrdersController implements Initializable {
             orderInfoloader = new FXMLLoader(getClass().getResource(orderInfoViewLocation));
             orderInfoView = orderInfoloader.load();
             orderInfoController = orderInfoloader.getController();
+            ControllerManager.setOrderINFOController(orderInfoController);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -152,6 +153,7 @@ public class OrdersController implements Initializable {
 
     private void orderInfoShowAndWait() {
         orderInfoStage.showAndWait();
+        ordersTable.sort();
     }
 
     public void showNewOrderView() {

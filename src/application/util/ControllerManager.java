@@ -9,7 +9,10 @@ public class ControllerManager {
     private static NewPaymentController newPaymentController;
     private static ClientINFOController clientINFOController;
     private static OrdersController ordersController;
+    private static OrderINFOController orderINFOController;
     private static RootViewController rootViewController;
+    private static NewJobAndMatController newJobAndMatController;
+    private static JobAndMatINFOController jobAndMatINFOController;
 
     public ControllerManager() {
     }
@@ -71,6 +74,36 @@ public class ControllerManager {
     public static void setRootViewController(RootViewController rootViewController) {
         if(ControllerManager.rootViewController == null) {
             ControllerManager.rootViewController = rootViewController;
+        }
+    }
+
+    public static NewJobAndMatController getNewJobAndMatController() {
+        return newJobAndMatController;
+    }
+
+    public static void setNewJobAndMatController(NewJobAndMatController newJobAndMatController) {
+        if(ControllerManager.newJobAndMatController == null) {
+            ControllerManager.newJobAndMatController = newJobAndMatController;
+        }
+    }
+
+    public static OrderINFOController getOrderINFOController() {
+        return orderINFOController;
+    }
+
+    public static void setOrderINFOController(OrderINFOController orderINFOController) {
+        if(ControllerManager.orderINFOController == null) {
+            ControllerManager.orderINFOController = orderINFOController;
+        }
+    }
+
+    public static JobAndMatINFOController getJobAndMatINFOController() {
+        return jobAndMatINFOController;
+    }
+
+    public static void setJobAndMatINFOController(JobAndMatINFOController jobAndMatINFOController) {
+        if(ControllerManager.jobAndMatINFOController == null) {
+            ControllerManager.jobAndMatINFOController = jobAndMatINFOController;
         }
     }
 }

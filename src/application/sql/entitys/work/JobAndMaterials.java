@@ -1,6 +1,11 @@
 package application.sql.entitys.work;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,6 +20,15 @@ public class JobAndMaterials {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "job_id")
     private Job job;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "price")
+    private String price;
+
+    @Column(name = "warranty")
+    private Integer warranty;
 
     @Column(name = "cost_price")
     private String costPrice;
@@ -36,6 +50,16 @@ public class JobAndMaterials {
     private List<Order> orderList;
 
     public JobAndMaterials() {
+        initFields();
+    }
+
+    public JobAndMaterials(Job job, Employee doer) {
+        this();
+        this.job = job;
+        this.doer = doer;
+    }
+
+    private void initFields() {
         if(this.costPrice == null) {
             this.costPrice = "0";
         }
@@ -45,12 +69,9 @@ public class JobAndMaterials {
         if(this.numberOf == null) {
             this.numberOf = 1;
         }
-    }
-
-    public JobAndMaterials(Job job, Employee doer) {
-        this();
-        this.job = job;
-        this.doer = doer;
+        if(orderList == null) {
+            orderList = new ArrayList<>();
+        }
     }
 
     public Integer getId() {
@@ -115,6 +136,28 @@ public class JobAndMaterials {
 
     public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
+    }
+
+    public BigDecimal getBigDecimalAmount() {
+        return new BigDecimal(amountProperty().getValue());
+    }
+
+    public BigDecimal getBigDecimalDiscount() {
+        return new BigDecimal(discount);
+    }
+
+    public SimpleIntegerProperty numberOfProperty() {
+        return new SimpleIntegerProperty(getNumberOf());
+    }
+
+    public SimpleStringProperty amountProperty() {
+        BigDecimal price = new BigDecimal(getJob().getAmount());
+        BigDecimal amount = price.multiply(new BigDecimal(getNumberOf()));
+        return new SimpleStringProperty(amount.toString());
+    }
+
+    public SimpleStringProperty discountProperty() {
+        return new SimpleStringProperty(discount);
     }
 
     @Override

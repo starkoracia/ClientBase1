@@ -29,7 +29,6 @@ public class ClientTableManager implements TableManager<Client> {
     @Override
     public void fillData() {
         updateAll();
-        makeBackupList();
     }
 
     @Override

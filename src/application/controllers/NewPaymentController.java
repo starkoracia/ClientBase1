@@ -77,6 +77,7 @@ public class NewPaymentController implements Initializable {
     private void clientComboBoxUpdate() {
         clientComboBox.setItems(clientTableManager.getObservableList());
         clientComboBox.setValue(null);
+        clientComboBox.getEditor().setText("");
     }
 
     private void setClientComboBoxAutoCompletion() {

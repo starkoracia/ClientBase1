@@ -1,6 +1,8 @@
 package application.sql.entitys.work;
 
 import application.sql.daos.OrderStatusDAO;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 
@@ -73,11 +75,11 @@ public class Order {
     @JoinColumn(name = "doer_id")
     private Employee doer;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "orders_job_and_materials",
-            joinColumns = { @JoinColumn(name = "orders_id")},
-            inverseJoinColumns = { @JoinColumn(name = "job_and_materials_id")}
+            joinColumns = {@JoinColumn(name = "orders_id")},
+            inverseJoinColumns = {@JoinColumn(name = "job_and_materials_id")}
     )
     private List<JobAndMaterials> jobAndMaterialsList;
 
@@ -103,19 +105,19 @@ public class Order {
     }
 
     private void initFields() {
-        if(this.estimatedPrice == null) {
+        if (this.estimatedPrice == null) {
             this.estimatedPrice = "0";
         }
-        if(this.quickly == null) {
+        if (this.quickly == null) {
             this.quickly = false;
         }
-        if(this.prepayment == null) {
+        if (this.prepayment == null) {
             this.prepayment = "0";
         }
-        if(jobAndMaterialsList == null) {
+        if (jobAndMaterialsList == null) {
             jobAndMaterialsList = new ArrayList<>();
         }
-        if(paymentList == null) {
+        if (paymentList == null) {
             paymentList = new ArrayList<>();
         }
     }
@@ -294,7 +296,7 @@ public class Order {
 
     public BigDecimal getBigDecimalAmount() {
         BigDecimal tempBalance = new BigDecimal("0");
-        for(Payment payment : getPaymentList()) {
+        for (Payment payment : getPaymentList()) {
             tempBalance = tempBalance.add(payment.getBigDecimalAmount());
         }
         return tempBalance;
@@ -314,8 +316,8 @@ public class Order {
 
     public SimpleStringProperty deadlineProperty() {
         return new SimpleStringProperty(String.format("%s%n%s",
-                        getDeadline().toLocalDate().toString(),
-                        getDeadline().toLocalTime().toString()));
+                getDeadline().toLocalDate().toString(),
+                getDeadline().toLocalTime().toString()));
     }
 
     public SimpleStringProperty productTypeProperty() {
@@ -323,7 +325,7 @@ public class Order {
     }
 
     public SimpleStringProperty modelProperty() {
-        return new SimpleStringProperty(getModel());
+        return new SimpleStringProperty(String.format("%s%n%s", getBrandName(), getModel()));
     }
 
     public SimpleStringProperty malfunctionProperty() {
@@ -345,7 +347,12 @@ public class Order {
     }
 
     public SimpleStringProperty deadlineDifferenceProperty() {
-        return new SimpleStringProperty(Long.toString(DAYS.between(LocalDateTime.now(), getDeadline())));
+        return new SimpleStringProperty(
+                String.format("%s д.", Long.toString(DAYS.between(LocalDateTime.now(), getDeadline()))));
+    }
+
+    public SimpleLongProperty deadlineLongProperty() {
+        return new SimpleLongProperty(DAYS.between(LocalDateTime.now(), getDeadline()));
     }
 
     @Override

@@ -28,7 +28,6 @@ public class PaymentTableManager implements TableManager<Payment> {
     @Override
     public void fillData() {
         updateAll();
-        makeBackupList();
     }
 
     @Override

@@ -1,10 +1,8 @@
 package application.util.converters;
 
-import application.sql.daos.ClientDAO;
-import application.sql.daos.EmployeeDAO;
-import application.sql.daos.OrderStatusDAO;
-import application.sql.daos.PaymentArticleDAO;
+import application.sql.daos.*;
 import application.sql.entitys.work.Employee;
+import application.sql.entitys.work.Job;
 import application.sql.entitys.work.OrderStatus;
 import application.sql.entitys.work.PaymentArticle;
 import javafx.util.StringConverter;
@@ -15,6 +13,7 @@ public class StringConverterFactory {
     private static PaymentArticleDAO articleDAO;
     private static EmployeeDAO employeeDAO;
     private static OrderStatusDAO orderStatusDAO;
+    private static JobDAO jobDAO;
 
     private StringConverterFactory() {
     }
@@ -27,11 +26,10 @@ public class StringConverterFactory {
     }
 
     public static StringConverter<PaymentArticle> getPaymentArticleConverter() {
-        if(articleDAO == null) {
+        if (articleDAO == null) {
             articleDAO = new PaymentArticleDAO();
         }
         return new StringConverter<PaymentArticle>() {
-
             private Integer articleId;
 
             @Override
@@ -51,11 +49,10 @@ public class StringConverterFactory {
     }
 
     public static StringConverter<Employee> getEmployeeConverter() {
-        if(employeeDAO == null) {
+        if (employeeDAO == null) {
             employeeDAO = new EmployeeDAO();
         }
         return new StringConverter<Employee>() {
-
             private Integer employeeId;
 
             @Override
@@ -75,11 +72,10 @@ public class StringConverterFactory {
     }
 
     public static StringConverter<OrderStatus> getOrderStatusConverter() {
-        if(orderStatusDAO == null) {
+        if (orderStatusDAO == null) {
             orderStatusDAO = new OrderStatusDAO();
         }
         return new StringConverter<OrderStatus>() {
-
             private Integer orderStatusId;
 
             @Override
@@ -94,6 +90,29 @@ public class StringConverterFactory {
             @Override
             public OrderStatus fromString(String string) {
                 return orderStatusDAO.getByKey(orderStatusId);
+            }
+        };
+    }
+
+    public static StringConverter<Job> getJobConverter() {
+        if (jobDAO == null) {
+            jobDAO = new JobDAO();
+        }
+        return new StringConverter<Job>() {
+            private Integer jobId;
+
+            @Override
+            public String toString(Job job) {
+                if (job == null) {
+                    return null;
+                }
+                jobId = job.getId();
+                return job.nameAndAmountProperty().getValue();
+            }
+
+            @Override
+            public Job fromString(String string) {
+                return jobDAO.getByKey(jobId);
             }
         };
     }
