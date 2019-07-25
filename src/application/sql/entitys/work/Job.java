@@ -3,8 +3,6 @@ package application.sql.entitys.work;
 import javafx.beans.property.SimpleStringProperty;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,34 +16,28 @@ public class Job {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "amount")
-    private String amount;
+    @Column(name = "price")
+    private String price;
 
     @Column(name = "warranty")
     private Integer warranty;
-
-    @OneToMany(mappedBy = "job", targetEntity = JobAndMaterials.class, fetch = FetchType.LAZY)
-    private List<JobAndMaterials> jobAndMaterialsList;
 
     public Job() {
         initFields();
     }
 
-    public Job(String name, String amount) {
+    public Job(String name, String price) {
         this();
         this.name = name;
-        this.amount = amount;
+        this.price = price;
     }
 
     private void initFields() {
         if (this.warranty == null) {
             this.warranty = 0;
         }
-        if(this.amount == null) {
-            this.amount = "0";
-        }
-        if (jobAndMaterialsList == null) {
-            jobAndMaterialsList = new ArrayList<>();
+        if(this.price == null) {
+            this.price = "0";
         }
     }
 
@@ -65,12 +57,12 @@ public class Job {
         this.name = name;
     }
 
-    public String getAmount() {
-        return amount;
+    public String getPrice() {
+        return price;
     }
 
-    public void setAmount(String amount) {
-        this.amount = amount;
+    public void setPrice(String price) {
+        this.price = price;
     }
 
     public Integer getWarranty() {
@@ -81,25 +73,17 @@ public class Job {
         this.warranty = warranty;
     }
 
-    public List<JobAndMaterials> getJobAndMaterialsList() {
-        return jobAndMaterialsList;
-    }
-
-    public void setJobAndMaterialsList(List<JobAndMaterials> jobAndMaterialsList) {
-        this.jobAndMaterialsList = jobAndMaterialsList;
-    }
-
     public SimpleStringProperty nameProperty() {
         return new SimpleStringProperty(getName());
     }
 
     public SimpleStringProperty priceProperty() {
-        return new SimpleStringProperty(getAmount());
+        return new SimpleStringProperty(getPrice());
     }
 
     public SimpleStringProperty nameAndAmountProperty() {
         Double distance = (100 - getName().length() * 1.9);
-        String value = String.format("%s%" + distance.intValue() + "s грн.", getName(), getAmount());
+        String value = String.format("%s%" + distance.intValue() + "s грн.", getName(), getPrice());
         return new SimpleStringProperty(value);
     }
 
@@ -110,14 +94,13 @@ public class Job {
         Job job = (Job) o;
         return Objects.equals(id, job.id) &&
                 Objects.equals(name, job.name) &&
-                Objects.equals(amount, job.amount) &&
-                Objects.equals(warranty, job.warranty) &&
-                Objects.equals(jobAndMaterialsList, job.jobAndMaterialsList);
+                Objects.equals(price, job.price) &&
+                Objects.equals(warranty, job.warranty);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, amount, warranty, jobAndMaterialsList);
+        return Objects.hash(id, name, price, warranty);
     }
 
     @Override
@@ -125,7 +108,7 @@ public class Job {
         return "Job{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", amount='" + amount + '\'' +
+                ", amount='" + price + '\'' +
                 ", warranty=" + warranty +
                 '}';
     }

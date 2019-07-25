@@ -93,7 +93,7 @@ public class TableCreator extends DBConnector {
             "(\n" +
             "\tid int auto_increment,\n" +
             "\tname varchar(255) not null,\n" +
-            "\tamount varchar(255) not null,\n" +
+            "\tprice varchar(255) not null,\n" +
             "\twarranty int not null,\n" +
             "\tconstraint jobs_pk\n" +
             "\t\tprimary key (id)\n" +
@@ -102,7 +102,9 @@ public class TableCreator extends DBConnector {
     private static final String CREATE_JOB_AND_MATERIALS_TABLE = "create table if not exists job_and_materials\n" +
             "(\n" +
             "\tid int auto_increment,\n" +
-            "\tjob_id int not null,\n" +
+            "\tname varchar(255) not null,\n" +
+            "\tprice varchar(255) not null,\n" +
+            "\twarranty int not null,\n" +
             "\tcost_price varchar(255) not null,\n" +
             "\tdiscount varchar(255) not null,\n" +
             "\tdoer int not null,\n" +
@@ -112,8 +114,6 @@ public class TableCreator extends DBConnector {
             "\t\tprimary key (id),\n" +
             "\tconstraint job_and_materials_employees_id_fk\n" +
             "\t\tforeign key (doer) references employees (id),\n" +
-            "\tconstraint job_and_materials_jobs_id_fk\n" +
-            "\t\tforeign key (job_id) references jobs (id)\n" +
             ");";
 
     private static final String CREATE_ORDERS_TABLE = "create table if not exists orders\n" +

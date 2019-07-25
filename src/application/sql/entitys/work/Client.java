@@ -4,13 +4,14 @@ import javafx.beans.property.SimpleStringProperty;
 import jdk.nashorn.internal.ir.LiteralNode;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "clients")
-public class Client {
+public class Client implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

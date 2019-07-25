@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,15 +12,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "job_and_materials")
-public class JobAndMaterials {
+public class JobAndMaterials implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "job_id")
-    private Job job;
 
     @Column(name = "name")
     private String name;
@@ -46,7 +43,7 @@ public class JobAndMaterials {
     @Column(name = "number_of")
     private Integer numberOf;
 
-    @ManyToMany(mappedBy = "jobAndMaterialsList")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "jobAndMaterialsList")
     private List<Order> orderList;
 
     public JobAndMaterials() {
@@ -55,7 +52,16 @@ public class JobAndMaterials {
 
     public JobAndMaterials(Job job, Employee doer) {
         this();
-        this.job = job;
+        this.name = job.getName();
+        this.price = job.getPrice();
+        this.warranty = job.getWarranty();
+        this.doer = doer;
+    }
+
+    public JobAndMaterials(String name, String price, Employee doer) {
+        this();
+        this.name = name;
+        this.price = price;
         this.doer = doer;
     }
 
@@ -69,8 +75,11 @@ public class JobAndMaterials {
         if(this.numberOf == null) {
             this.numberOf = 1;
         }
-        if(orderList == null) {
-            orderList = new ArrayList<>();
+        if(this.orderList == null) {
+            this.orderList = new ArrayList<>();
+        }
+        if(this.warranty == null) {
+            this.warranty = 0;
         }
     }
 
@@ -80,14 +89,6 @@ public class JobAndMaterials {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public Job getJob() {
-        return job;
-    }
-
-    public void setJob(Job job) {
-        this.job = job;
     }
 
     public String getCostPrice() {
@@ -130,6 +131,30 @@ public class JobAndMaterials {
         this.numberOf = numberOf;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public Integer getWarranty() {
+        return warranty;
+    }
+
+    public void setWarranty(Integer warranty) {
+        this.warranty = warranty;
+    }
+
     public List<Order> getOrderList() {
         return orderList;
     }
@@ -151,13 +176,21 @@ public class JobAndMaterials {
     }
 
     public SimpleStringProperty amountProperty() {
-        BigDecimal price = new BigDecimal(getJob().getAmount());
+        BigDecimal price = new BigDecimal(getPrice());
         BigDecimal amount = price.multiply(new BigDecimal(getNumberOf()));
         return new SimpleStringProperty(amount.toString());
     }
 
     public SimpleStringProperty discountProperty() {
-        return new SimpleStringProperty(discount);
+        return new SimpleStringProperty(getDiscount());
+    }
+
+    public SimpleStringProperty nameProperty() {
+        return new SimpleStringProperty(getName());
+    }
+
+    public SimpleStringProperty priceProperty() {
+        return new SimpleStringProperty(getPrice());
     }
 
     @Override
@@ -166,7 +199,9 @@ public class JobAndMaterials {
         if (o == null || getClass() != o.getClass()) return false;
         JobAndMaterials that = (JobAndMaterials) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(job, that.job) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(warranty, that.warranty) &&
                 Objects.equals(costPrice, that.costPrice) &&
                 Objects.equals(discount, that.discount) &&
                 Objects.equals(doer, that.doer) &&
@@ -177,19 +212,22 @@ public class JobAndMaterials {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, job, costPrice, discount, doer, comment, numberOf, orderList);
+        return Objects.hash(id, name, price, warranty, costPrice, discount, doer, comment, numberOf, orderList);
     }
 
     @Override
     public String toString() {
         return "JobAndMaterials{" +
                 "id=" + id +
-                ", job=" + job +
+                ", name='" + name + '\'' +
+                ", price='" + price + '\'' +
+                ", warranty=" + warranty +
                 ", costPrice='" + costPrice + '\'' +
                 ", discount='" + discount + '\'' +
                 ", doer=" + doer +
                 ", comment='" + comment + '\'' +
                 ", numberOf=" + numberOf +
+                ", orderList=" + orderList +
                 '}';
     }
 }

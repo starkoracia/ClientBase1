@@ -3,11 +3,13 @@ package application.controllers;
 import application.sql.daos.EmployeeDAO;
 import application.sql.entitys.work.Employee;
 import application.sql.entitys.work.JobAndMaterials;
+import application.util.AlertCaster;
 import application.util.converters.StringConverterFactory;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,6 +27,8 @@ public class JobAndMatINFOController implements Initializable {
     public Label headNameLabel;
     private EmployeeDAO employeeDAO;
     private JobAndMaterials jobAndMat;
+    private Stage jobAndMatINFOStage;
+    private boolean saveButtonPressed;
 
     public JobAndMatINFOController() {
         employeeDAO = new EmployeeDAO();
@@ -41,19 +45,59 @@ public class JobAndMatINFOController implements Initializable {
     }
 
     public void setJobAndMatToJobAndMatINFO(JobAndMaterials jobAndMat) {
+        saveButtonPressed = false;
         this.jobAndMat = jobAndMat;
-        doerChoiceBox.setValue(jobAndMat.getDoer());
-        headNameLabel.setText(jobAndMat.getJob().getName());
+        if(jobAndMat.getDoer() != null) {
+            doerChoiceBox.setValue(jobAndMat.getDoer());
+        } else {
+            doerChoiceBox.setValue(null);
+        }
+        headNameLabel.setText(jobAndMat.getName());
         numberOfTextField.setText(jobAndMat.getNumberOf().toString());
-        priceTextField.setText(jobAndMat.getJob().getAmount());
+        priceTextField.setText(jobAndMat.getPrice());
         costPriceTextField.setText(jobAndMat.getCostPrice());
         commentTextArea.setText(jobAndMat.getComment());
         discountTextField.setText(jobAndMat.getDiscount());
-        warrantyTextField.setText(jobAndMat.getJob().getWarranty().toString());
+        warrantyTextField.setText(jobAndMat.getWarranty().toString());
     }
 
     public void saveButtonOnAction(ActionEvent actionEvent) {
+        if (isAllFieldsAreFiled()) {
+            updateJobAndMat();
+            saveButtonPressed = true;
+            jobAndMatINFOStage.hide();
+        } else {
+            AlertCaster.castInfoAlert("Заполните все поля со звездочкой *");
+        }
+    }
+
+    private boolean isAllFieldsAreFiled() {
+        if (!numberOfTextField.getText().equals("") && !priceTextField.getText().equals("")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void updateJobAndMat() {
         jobAndMat.setDoer(doerChoiceBox.getValue());
         jobAndMat.setNumberOf(Integer.parseInt(numberOfTextField.getText()));
+        jobAndMat.setPrice(priceTextField.getText());
+        jobAndMat.setCostPrice(costPriceTextField.getText());
+        jobAndMat.setComment(commentTextArea.getText());
+        jobAndMat.setDiscount(discountTextField.getText());
+        jobAndMat.setWarranty(Integer.parseInt(warrantyTextField.getText()));
+    }
+
+    public void setJobAndMatINFOStage(Stage jobAndMatINFOStage) {
+        this.jobAndMatINFOStage = jobAndMatINFOStage;
+    }
+
+    public boolean isSaveButtonPressed() {
+        return saveButtonPressed;
+    }
+
+    public JobAndMaterials getJobAndMat() {
+        return jobAndMat;
     }
 }

@@ -1,12 +1,13 @@
 package application.sql.entitys.work;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "order_status_groups")
-public class OrderStatusGroup {
+public class OrderStatusGroup implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

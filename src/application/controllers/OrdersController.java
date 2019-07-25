@@ -1,5 +1,6 @@
 package application.controllers;
 
+import application.sql.entitys.work.JobAndMaterials;
 import application.sql.entitys.work.Order;
 import application.util.ControllerManager;
 import application.util.FocusRepeater;
@@ -99,14 +100,14 @@ public class OrdersController implements Initializable {
     private void makeHotFilterPanelsInvisible() {
         ObservableList<Order> ordersQuickList = FXCollections.observableArrayList();
         boolean isHaveQuickOrders = false;
-        for(Order order : orderTableManager.getObservableList()) {
-            if(order.getQuickly()) {
+        for (Order order : orderTableManager.getObservableList()) {
+            if (order.getQuickly()) {
                 System.out.println("Quick");
                 ordersQuickList.add(order);
                 isHaveQuickOrders = true;
             }
         }
-        if(isHaveQuickOrders) {
+        if (isHaveQuickOrders) {
             quicklyOrdersFilterAnchorPane.setVisible(true);
         } else {
             quicklyOrdersFilterAnchorPane.setVisible(false);
@@ -206,8 +207,13 @@ public class OrdersController implements Initializable {
     }
 
     public void onMouseClickedTable(MouseEvent mouseEvent) {
-        if(mouseEvent.getClickCount() == 2) {
-            showOrderInfoView(ordersTable.getSelectionModel().getSelectedItem());
+        if (mouseEvent.getClickCount() == 2) {
+            order = ordersTable.getSelectionModel().getSelectedItem();
+            showOrderInfoView(order);
+            if (!orderInfoController.isSaveButtonPressed()) {
+                order.getJobAndMaterialsList().clear();
+                order.getJobAndMaterialsList().addAll(orderInfoController.getOrderListOldValue());
+            }
         }
     }
 

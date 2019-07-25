@@ -5,6 +5,7 @@ import application.sql.entitys.work.*;
 import application.util.AlertCaster;
 import application.util.ControllerManager;
 import application.util.JobAndMatCreater;
+import application.util.ListCloner;
 import application.util.combobox.AutoCompletionJobCBox;
 import application.util.combobox.ComboBoxAutoCompletioner;
 import application.util.comparators.ClientComparator;
@@ -35,6 +36,8 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class OrderINFOController implements Initializable {
@@ -105,6 +108,8 @@ public class OrderINFOController implements Initializable {
     private AnchorPane jobAndMatINFOView;
     private JobAndMatINFOController jobAndMatINFOController;
     private Stage jobAndMatINFOStage;
+    private List<JobAndMaterials> orderListOldValue;
+    private boolean saveButtonPressed;
 
     public OrderINFOController() {
         orderStatusDAO = new OrderStatusDAO();
@@ -155,7 +160,9 @@ public class OrderINFOController implements Initializable {
     private BigDecimal getCalculateAmount() {
         BigDecimal tempAmount = new BigDecimal("0");
         for (JobAndMaterials jobAndMaterials : jobAndMatTableView.getItems()) {
-            tempAmount = tempAmount.add(jobAndMaterials.getBigDecimalAmount());
+            BigDecimal multiplyAmount = new BigDecimal(
+                    Integer.parseInt(jobAndMaterials.getPrice()) * jobAndMaterials.getNumberOf());
+            tempAmount = tempAmount.add(multiplyAmount);
         }
         tempAmount = tempAmount.subtract(getCalculateDiscount());
         return tempAmount;
@@ -185,7 +192,7 @@ public class OrderINFOController implements Initializable {
     private void setComboBoxesAutoCompletion() {
         ComboBoxAutoCompletioner.autoCompleteComboBoxPlus(clientComboBox, ClientComparator.getComparator());
         AutoCompletionJobCBox.autoCompleteComboBoxPlus(jobComboBox, JobComparator.getComparator());
-        }
+    }
 
     private void setComboBoxesItems() {
         clientComboBox.setItems(clientTableManager.getObservableList());
@@ -219,17 +226,19 @@ public class OrderINFOController implements Initializable {
     }
 
     private void setJobAndMatTableItems(Order order) {
+        orderListOldValue = ListCloner.cloneSerializeList(order.getJobAndMaterialsList());
         jobAndMatTableView.setItems(FXCollections.observableArrayList(order.getJobAndMaterialsList()));
     }
 
     private void setJAMTableCellDataValues() {
-        nameTableColumn.setCellValueFactory(param -> param.getValue().getJob().nameProperty());
+        nameTableColumn.setCellValueFactory(param -> param.getValue().nameProperty());
         numberOfTableColumn.setCellValueFactory(param -> param.getValue().numberOfProperty().asObject());
-        priceTableColumn.setCellValueFactory(param -> param.getValue().getJob().priceProperty());
+        priceTableColumn.setCellValueFactory(param -> param.getValue().priceProperty());
         amountTableColumn.setCellValueFactory(param -> param.getValue().amountProperty());
     }
 
     public void setOrderToOrderInfo(Order order) {
+        saveButtonPressed = false;
         this.order = order;
         headOrderNumberLabel.setText(String.format("Заказ№ %s", order.getOrderNumber()));
         headOrderStatusChoiceBox.setValue(order.getStatus());
@@ -285,7 +294,7 @@ public class OrderINFOController implements Initializable {
     }
 
     public void showJobAndMatINFOWindow(JobAndMaterials jobAndMat) {
-        if(jobAndMatINFOStage == null) {
+        if (jobAndMatINFOStage == null) {
             jobAndMatINFOStage = new Stage();
             setStage(getThisWindow(), jobAndMatINFOStage, "Работа и материалы", jobAndMatINFOView);
         }
@@ -295,10 +304,12 @@ public class OrderINFOController implements Initializable {
 
     private void setJobAndMatINFOController(JobAndMaterials jobAndMat) {
         jobAndMatINFOController.setJobAndMatToJobAndMatINFO(jobAndMat);
+        jobAndMatINFOController.setJobAndMatINFOStage(jobAndMatINFOStage);
     }
 
     private void jobAndMatINFOShowAndWait() {
         jobAndMatINFOStage.showAndWait();
+        jobAndMatTableView.sort();
     }
 
     public void showNewJobAndMatWindow(String jobName) {
@@ -368,6 +379,7 @@ public class OrderINFOController implements Initializable {
     public void saveButtonOnAction(ActionEvent actionEvent) {
         if (isAllFieldsAreFilled()) {
             updateOrder();
+            saveButtonPressed = true;
             orderInfoStage.hide();
         } else {
             AlertCaster.castInfoAlert("Заполните все поля со звездочкой *");
@@ -394,12 +406,12 @@ public class OrderINFOController implements Initializable {
 
         order.setDoerNote(doerNoteTextArea.getText());
         order.setRecommendation(recommendationTextArea.getText());
-        setJobAndMatFromTable(order);
+        setOrderJobAndMatListFromTable(order);
 
         orderTableManager.update(order);
     }
 
-    private void setJobAndMatFromTable(Order order) {
+    private void setOrderJobAndMatListFromTable(Order order) {
         order.getJobAndMaterialsList().clear();
         order.getJobAndMaterialsList().addAll(jobAndMatTableView.getItems());
     }
@@ -435,6 +447,7 @@ public class OrderINFOController implements Initializable {
         if (newJobAndMatController.isNewJobAndMatAdded()) {
             jobAndMat = newJobAndMatController.getJobAndMaterials();
             addJobAndMatToTable(jobAndMat);
+            jobComboBoxUpdate();
         }
     }
 
@@ -444,7 +457,9 @@ public class OrderINFOController implements Initializable {
     }
 
     public void addJobToTableButtonOnAction(ActionEvent actionEvent) {
-        addJobToTable(jobComboBox.getValue(), doerInJobAndMComboBox.getValue());
+        if(jobComboBox.getValue() != null) {
+            addJobToTable(jobComboBox.getValue(), doerInJobAndMComboBox.getValue());
+        }
     }
 
     private void addJobToTable(Job job, Employee doer) {
@@ -458,8 +473,25 @@ public class OrderINFOController implements Initializable {
     }
 
     public void onMouseClickedOnTable(MouseEvent mouseEvent) {
-        if(mouseEvent.getClickCount() == 2) {
+        if (mouseEvent.getClickCount() == 2) {
+            int index = jobAndMatTableView.getSelectionModel().getSelectedIndex();
             showJobAndMatINFOWindow(jobAndMatTableView.getSelectionModel().getSelectedItem());
+            if (jobAndMatINFOController.isSaveButtonPressed()) {
+                jobAndMatTableView.getItems().set(index,jobAndMatINFOController.getJobAndMat());
+                setAmountDiscountProperty();
+            }
         }
+    }
+
+    public boolean isSaveButtonPressed() {
+        return saveButtonPressed;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public List<JobAndMaterials> getOrderListOldValue() {
+        return orderListOldValue;
     }
 }

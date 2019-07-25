@@ -10,6 +10,7 @@ import application.util.tablemanagers.JobTableManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -28,6 +29,7 @@ public class NewJobAndMatController implements Initializable {
     public TextField discountTextField;
     public TextField warrantyTextField;
     public Button saveButton;
+    public CheckBox saveToJobsCheckBox;
     private Employee doer;
     private JobAndMaterials jobAndMaterials;
     private JobAndMatTableManager jobAndMatTableManager;
@@ -55,11 +57,12 @@ public class NewJobAndMatController implements Initializable {
         commentTextArea.setText("");
         discountTextField.setText("0");
         warrantyTextField.setText("0");
+        saveToJobsCheckBox.setSelected(false);
     }
 
     public void saveButtonOnAction(ActionEvent actionEvent) {
         if(isAllFieldsAreFild()){
-            createAndAddNewJobAndMat();
+            createAndAddNewJobAndMat(saveToJobsCheckBox.isSelected());
             isNewJobAndMatAdded = true;
             newJobAndMatStage.hide();
         } else {
@@ -67,18 +70,26 @@ public class NewJobAndMatController implements Initializable {
         }
     }
 
-    private void createAndAddNewJobAndMat() {
-        Job job = new Job(
-                nameTextField.getText(),
-                priceTextField.getText()
-        );
-        job.setWarranty(Integer.parseInt(warrantyTextField.getText()));
-        jobTableManager.add(job);
+    private void createAndAddNewJobAndMat(boolean saveToJobs) {
+        if(saveToJobs) {
+            Job job = new Job(
+                    nameTextField.getText(),
+                    priceTextField.getText()
+            );
+            job.setWarranty(Integer.parseInt(warrantyTextField.getText()));
+            jobTableManager.add(job);
 
-        jobAndMaterials = new JobAndMaterials(
-                job,
-                doer
-        );
+            jobAndMaterials = new JobAndMaterials(
+                    job,
+                    doer
+            );
+        } else {
+            jobAndMaterials = new JobAndMaterials(
+                    nameTextField.getText(),
+                    priceTextField.getText(),
+                    doer
+            );
+        }
         jobAndMaterials.setNumberOf(Integer.parseInt(numberOfTextField.getText()));
         jobAndMaterials.setCostPrice(costPriceTextField.getText());
         jobAndMaterials.setComment(commentTextArea.getText());

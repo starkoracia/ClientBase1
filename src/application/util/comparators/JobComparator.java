@@ -7,7 +7,7 @@ public class JobComparator implements ComboBoxAutoCompletioner.AutoCompleteCompa
     @Override
     public boolean matches(String typedText, Job objectToCompare) {
         return objectToCompare.getName().toLowerCase().contains(typedText.toLowerCase())
-                || objectToCompare.getAmount().contains(typedText);
+                || objectToCompare.getPrice().contains(typedText);
     }
 
     public static JobComparator getComparator() {
